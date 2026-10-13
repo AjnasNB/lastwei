@@ -9,6 +9,8 @@ slightly short of a native ETH payment.
 - [Colosseum project](https://colosseum.com/arena/projects/lastwei)
 - [Security and limitations](docs/SECURITY.md)
 - [Verified deployment and receipts](docs/DEPLOYMENT.md)
+- [Product demo video](https://youtu.be/XpkhqhoKzFo)
+- [Founder pitch video](https://youtu.be/ugDeGsjoCKM)
 
 ## What works
 
