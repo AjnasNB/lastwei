@@ -1,4 +1,4 @@
-import { useEffect, useState, lazy, Suspense } from "react";
+import { useEffect, useState, useRef, lazy, Suspense } from "react";
 import {
   ArrowUpRight,
   ArrowRight,
@@ -34,6 +34,7 @@ const statusLabels: Record<string, string> = {
   failed: "Demo needs attention",
 };
 export function App() {
+  const mainRef = useRef<HTMLElement>(null);
   const [route, setRoute] = useState(location.hash.slice(1) || "complete");
   const [mode, setMode] = useState<"simulation" | "live">(
     new URLSearchParams(location.search).get("demo") === "live"
@@ -51,6 +52,7 @@ export function App() {
   const [error, setError] = useState("");
   const [now, setNow] = useState(Date.now());
   const [copied, setCopied] = useState(false);
+  useEffect(() => setCopied(false), [run?.intent_id]);
   useEffect(() => {
     const changed = () => setRoute(location.hash.slice(1) || "complete");
     window.addEventListener("hashchange", changed);
@@ -180,9 +182,52 @@ export function App() {
     : funded
       ? "Locked to one action."
       : "A little short. A lot simpler.";
+  useEffect(() => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reducedMotion.matches || route !== "complete") return;
+    const animations: Animation[] = [];
+    const orbit = mainRef.current?.querySelector(".orbit");
+    if (orbit)
+      animations.push(
+        orbit.animate(
+          [
+            { opacity: 0.65, transform: "scale(0.92) rotate(-8deg)" },
+            { opacity: 1, transform: "scale(1) rotate(0deg)" },
+          ],
+          {
+            duration: settled ? 480 : 320,
+            easing: "cubic-bezier(.2,.75,.25,1)",
+          },
+        ),
+      );
+    const step = mainRef.current?.querySelector(
+      `.steps li:nth-child(${Math.max(1, stage)}) .step-number`,
+    );
+    if (step)
+      animations.push(
+        step.animate([{ transform: "scale(0.8)" }, { transform: "scale(1)" }], {
+          duration: 320,
+          easing: "cubic-bezier(.2,.75,.25,1)",
+        }),
+      );
+    const stop = () => animations.forEach((animation) => animation.cancel());
+    reducedMotion.addEventListener("change", stop);
+    return () => {
+      reducedMotion.removeEventListener("change", stop);
+      stop();
+    };
+  }, [stage, settled, currentKind, mode, route]);
   return (
     <div className="app">
-      <a className="skip" href="#main">
+      <a
+        className="skip"
+        href="#main"
+        onClick={(event) => {
+          event.preventDefault();
+          mainRef.current?.focus();
+          mainRef.current?.scrollIntoView({ behavior: "auto" });
+        }}
+      >
         Skip to content
       </a>
       <header className="topbar">
@@ -253,7 +298,7 @@ export function App() {
           </div>
           <div className="sidebar-foot">COLOSSEUM · WORLD’S FAIR 2026</div>
         </aside>
-        <main id="main" className="main" tabIndex={-1}>
+        <main ref={mainRef} id="main" className="main" tabIndex={-1}>
           {route === "wallet" ? (
             <>
               <div className="eyebrow">YOUR ACCOUNT / BASE SEPOLIA</div>
@@ -345,7 +390,7 @@ export function App() {
                   <div className="action-divider" />
                   <div className="funding-heading">
                     <h3>Only fund what’s missing.</h3>
-                    <span className="mono">{pct}% available</span>
+                    <span className="mono">{pct}% from owner</span>
                   </div>
                   <div
                     className="funding-bar"
@@ -379,7 +424,7 @@ export function App() {
                       </dd>
                     </div>
                     <div>
-                      <dt>Available in intent account</dt>
+                      <dt>Owner contribution</dt>
                       <dd>
                         {((pct / 100) * 0.001).toFixed(5)} <span>ETH</span>
                       </dd>
@@ -462,9 +507,11 @@ export function App() {
                         ? "Preparing…"
                         : liveBusy
                           ? "Transaction in progress…"
-                          : config?.ready
-                            ? "Run Sepolia demo"
-                            : "Sepolia demo preparing"}
+                          : config?.remaining === 0
+                            ? "Public demo budget used"
+                            : config?.ready
+                              ? "Run Sepolia demo"
+                              : "Sepolia demo preparing"}
                     <ArrowRight size={18} />
                   </button>
                   <div className="button-note">
@@ -479,6 +526,16 @@ export function App() {
                       capped testnet budget
                     </p>
                   )}
+                  <div className="receipt-links">
+                    <a
+                      href={`${repo}/blob/main/docs/DEPLOYMENT.md`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <Receipt size={14} /> Verified live receipts
+                      <ArrowUpRight size={14} />
+                    </a>
+                  </div>
                   {error && (
                     <div className="error" role="alert">
                       {error}
@@ -509,7 +566,13 @@ export function App() {
                   <div className="panel-top">
                     <span className="eyebrow">02 / SETTLEMENT</span>
                     <span className={`tag ${settled ? "success" : ""}`}>
-                      {settled ? "Settled" : funded ? "In progress" : "Ready"}
+                      {settled
+                        ? mode === "simulation"
+                          ? "Simulated"
+                          : "Settled"
+                        : funded
+                          ? "In progress"
+                          : "Ready"}
                     </span>
                   </div>
                   <div className="settlement-visual">
@@ -747,6 +810,14 @@ function Protocol({ config }: { config: NetworkConfig | null }) {
         <section>
           <h2>Inspect the evidence</h2>
           <div className="evidence-links">
+            <a
+              href={`${repo}/blob/main/docs/DEPLOYMENT.md`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Receipt size={20} />
+              Verified deployment and receipts <ArrowUpRight size={16} />
+            </a>
             <a href={repo} target="_blank" rel="noreferrer">
               <Code size={20} />
               Public repository <ArrowUpRight size={16} />

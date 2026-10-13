@@ -18,12 +18,25 @@ test("simulation completes and refunds; mode remains explicit", async ({
       "Interactive simulation. No wallet, blockchain transactions, or real funds.",
     ),
   ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Verified live receipts" }),
+  ).toHaveAttribute(
+    "href",
+    "https://github.com/AjnasNB/lastwei/blob/main/docs/DEPLOYMENT.md",
+  );
   await page
     .getByRole("button", { name: "Run simulation", exact: true })
     .click();
   await expect(
     page.getByText("Simulation completed", { exact: true }),
   ).toBeVisible();
+  await expect(
+    page.getByText("Owner contribution", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Available in intent account", { exact: true }),
+  ).toHaveCount(0);
+  await expect(page.getByText("Simulated", { exact: true })).toBeVisible();
   await page.getByLabel("Demo outcome").selectOption("refund");
   await page
     .getByRole("button", { name: "Run simulation", exact: true })
@@ -34,6 +47,33 @@ test("simulation completes and refunds; mode remains explicit", async ({
   await expect(
     page.getByRole("heading", { name: "Sponsorship returned." }),
   ).toBeVisible();
+});
+
+test("skip link preserves the wallet route and reduced motion stays still", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/#wallet");
+  await page.keyboard.press("Tab");
+  await expect(
+    page.getByRole("link", { name: "Skip to content" }),
+  ).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page.locator("main")).toBeFocused();
+  await expect(page).toHaveURL(/#wallet$/);
+  await expect(
+    page.getByRole("heading", { name: "Bring your own intent." }),
+  ).toBeVisible();
+  await page
+    .getByRole("link", { name: "Complete an action", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Run simulation", exact: true })
+    .click();
+  await expect(
+    page.getByText("Simulation completed", { exact: true }),
+  ).toBeVisible();
+  expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
 });
 test("changing contribution recalculates the exact shortfall", async ({
   page,
@@ -158,10 +198,30 @@ test("wallet owner and sponsor complete a real local-EVM checkout through the UI
       { exact: true },
     ),
   ).toBeVisible();
+  const review = page.locator("dl.compact");
+  await expect(
+    review.locator("div").filter({ hasText: "Total action value" }),
+  ).toContainText("0.001 ETH");
+  await expect(
+    review.locator("div").filter({ hasText: "Owner contribution" }),
+  ).toContainText("0.0007 ETH");
+  await expect(
+    review.locator("div").filter({ hasText: "Exact sponsor value" }),
+  ).toContainText("0.0003 ETH");
+  await expect(
+    review
+      .locator("div")
+      .filter({ hasText: "Checkout destination" })
+      .getByRole("link"),
+  ).toHaveAttribute("href", `${config.explorer}/address/${config.checkout}`);
   await page
     .getByRole("button", { name: "Fund shortfall", exact: true })
     .click();
   await expect(page.getByText("Funded", { exact: true })).toBeVisible();
+  await page.getByText("Cancellation and refunds", { exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Cancel as owner", exact: true }),
+  ).toBeDisabled();
   await page
     .getByRole("button", { name: "Execute payment", exact: true })
     .click();

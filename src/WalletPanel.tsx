@@ -546,7 +546,50 @@ export function WalletPanel({ config }: { config: NetworkConfig | null }) {
               <dl className="amounts compact">
                 <div>
                   <dt>Beneficiary</dt>
-                  <dd>{clip(pkg.owner)}</dd>
+                  <dd>
+                    <a
+                      href={`${config?.explorer ?? "https://sepolia.basescan.org"}/address/${pkg.owner}`}
+                      title={pkg.owner}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {clip(pkg.owner)} <ArrowUpRight size={12} />
+                    </a>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Checkout destination</dt>
+                  <dd>
+                    <a
+                      href={`${config?.explorer ?? "https://sepolia.basescan.org"}/address/${pkg.intent.target}`}
+                      title={pkg.intent.target}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {clip(pkg.intent.target)} <ArrowUpRight size={12} />
+                    </a>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Intent account</dt>
+                  <dd>
+                    <a
+                      href={`${config?.explorer ?? "https://sepolia.basescan.org"}/address/${pkg.account}`}
+                      title={pkg.account}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {clip(pkg.account)} <ArrowUpRight size={12} />
+                    </a>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Total action value</dt>
+                  <dd>{formatEther(pkg.intent.value)} ETH</dd>
+                </div>
+                <div>
+                  <dt>Owner contribution</dt>
+                  <dd>{formatEther(pkg.intent.contribution)} ETH</dd>
                 </div>
                 <div>
                   <dt>Exact sponsor value</dt>
@@ -560,7 +603,12 @@ export function WalletPanel({ config }: { config: NetworkConfig | null }) {
                   <dd>
                     {new Date(
                       Number(pkg.intent.deadline) * 1000,
-                    ).toLocaleTimeString()}
+                    ).toLocaleString(undefined, {
+                      month: "short",
+                      day: "numeric",
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}
                   </dd>
                 </div>
                 <div>
@@ -571,13 +619,18 @@ export function WalletPanel({ config }: { config: NetworkConfig | null }) {
                         "Not funded",
                         "Funded",
                         "Executed",
-                        "Refunded",
+                        "Escrow released",
                         "Cancelled",
                       ][onchainStatus ?? 0]
                     }
                   </dd>
                 </div>
               </dl>
+              <p className="helper">
+                Your wallet sends exactly the sponsor value. Transaction gas is
+                paid separately. This request buys the named beneficiary’s demo
+                receipt.
+              </p>
               <button
                 type="button"
                 className="primary wide"
@@ -604,7 +657,12 @@ export function WalletPanel({ config }: { config: NetworkConfig | null }) {
                 <div className="recovery-buttons">
                   <button
                     type="button"
-                    disabled={!address || busy || onchainStatus !== 1}
+                    disabled={
+                      !address ||
+                      busy ||
+                      onchainStatus !== 1 ||
+                      address.toLowerCase() !== pkg.owner.toLowerCase()
+                    }
                     onClick={() => operate("cancel")}
                   >
                     Cancel as owner
