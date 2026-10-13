@@ -27,7 +27,7 @@
       "reading": true
     },
     "flash_exempt": 0,
-    "texts": 82,
+    "texts": 86,
     "smallest": {
       "text": "LastWei / payment value sponsorship",
       "px": 36,
@@ -355,6 +355,34 @@
       "severity": "info",
       "code": "title_safe",
       "message": "canvas text \"Base Sepolia prototype\" is within 5% of the frame edge at 1:36.93",
+      "t": 96.933333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Pilot hypothesis\" is within 5% of the frame edge at 1:36.93",
+      "t": 96.933333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Merchant + community sponsors\" is within 5% of the frame edge at 1:36.93",
+      "t": 96.933333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Fund one workshop checkout.\" is within 5% of the frame edge at 1:36.93",
+      "t": 96.933333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"0.0007 owner + 0.0003 sponsor ETH\" is within 5% of the frame edge at 1:36.93",
       "t": 96.933333,
       "source": "canvas"
     },

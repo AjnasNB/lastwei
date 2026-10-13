@@ -172,19 +172,20 @@
       }
     } else if (i === 2) {
       capture('quote', [303, 420, 540, 350], .33);
-      paymentDocument(t, { x: 640, y: 520, scale: .68, angle: -.025, alpha: 1 });
+      paymentDocument(t, { x: 640, y: 480, scale: .50, angle: -.025, alpha: 1 });
+      text('Existing workaround',640,78,35,MUTED,'center');
       const phrases = ['Leave the app', 'Buy more ETH', 'Return to checkout'], k = Math.min(2, Math.floor(u / 4.05));
       enter(phrases[k], 640, 153, t, a + k * 4.05, 74, INK, 'center');
       movingAmount('0.0003', 'The same shortfall', t, a, b - .6,
-        [[360, 850], [130, 420], [590, 230], [1120, 430], [1030, 925], [310, 925]], 85);
+        [[280, 895], [420, 850], [720, 860], [980, 890], [910, 945], [320, 935]], 85);
     } else if (i === 3) {
       paymentDocument(t, { x: 770, y: 330, scale: .64, angle: -.035, focus: 1 });
       if (u < 3.75) movingAmount('0.0003', 'Sponsor exactly this gap', t, a, a + 3.4,
         [[310, 925], [430, 877], [640, 850]], 142);
       else {
         const v = ease(p(t, a + 3.75, a + 5.0));
-        movingAmount('0.0007', 'Owner', t, a + 3.75, a + 5.0, [[-130, 890], [325, 815], [435, 760]], 82, INK);
-        movingAmount('0.0003', 'Sponsor', t, a + 3.75, a + 5.0, [[1390, 890], [975, 815], [845, 760]], 82);
+        movingAmount('0.0007', 'Owner', t, a + 3.75, a + 5.0, [[220, 890], [325, 815], [435, 760]], 82, INK);
+        movingAmount('0.0003', 'Sponsor', t, a + 3.75, a + 5.0, [[1060, 890], [975, 815], [845, 760]], 82);
         if (v > .8) { G.fillStyle = '#fff'; G.fillRect(300, 703, 835, 265); amount('0.0010', 'One authorized payment', 710, 855, 114, GREEN); }
       }
     } else if (i === 4) {
@@ -243,7 +244,8 @@
     else if (i === 9) {
       if (u < 5.5) capture('quote', [577, 447 + 19 * u, 290, 245], 1, [0, 0], 1);
       else capture('executed', [910, 340, 440, 460], 1, [-40 * p(t, a + 5.5, b), 0], 1);
-      smallBand('Next: test checkout completion.', 1000, 61);
+      smallBand('Next experiment: merchant checkout pilot', 948, 52);
+      text('Measure completion and sponsor cost',640,1015,38,MUTED,'center');
     } else if (i === 10) {
       capture('wallet', [875, 450, 482, 451], .36);
       paymentDocument(t, { x: lerp(640, 450, soft(p(t, a, b))), y: 518, scale: .81, angle: -.04, alpha: .9, state: 'Open-source prototype' });
@@ -251,8 +253,8 @@
       text('Base Sepolia', 85, 838, 86); text('Test ETH · chain 84532', 85, 907, 43, MUTED);
       if (u > 5.5) enter('Unaudited prototype', 85, 1015, t, a + 5.5, 72, GREEN);
     } else {
-      if (u < 7.3) { capture('executed', [907, 338, 440, 458], 1, [-25 * soft(p(t, a, a + 7.3)), 0], 1); smallBand('Finish the action.', 994, 78); }
-      else { capture('executed', [910, 560, 440, 275], .18); F.drawImage('logo', 220, 414, 166, 166); text('LastWei', 430, 550, 112); }
+      if (u < 5.5) { capture('executed', [907, 338, 440, 458], 1, [-25 * soft(p(t, a, a + 5.5)), 0], 1); smallBand('Finish the action.', 994, 78); }
+      else { capture('executed', [910, 560, 440, 275], .18); F.drawImage('logo', 220, 414, 166, 166); text('LastWei', 430, 550, 112); text('lastwei.ajnasnb.workers.dev',640,735,43,GREEN,'center'); }
     }
     G.restore(); portrait(); line(1280, 0, 1280, 1080, 1, '#dde5dc', 2);
   }

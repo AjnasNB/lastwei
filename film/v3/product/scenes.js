@@ -230,6 +230,11 @@
     if(local<8.5) {
       ui('evidence',local,[[0,960,530,1.08],[2,...wt(665,580),1.52],[4.5,...wt(700,700),1.85],[7.2,...wt(670,785),1.58],[8.5,960,560,1.15]]);
       band('Open source. Source verified.','Base Sepolia prototype',local);
+      G.fillStyle=P.paper;G.fillRect(50,315,1160,420);
+      text('Pilot hypothesis',90,385,42,P.muted);
+      text('Merchant + community sponsors',90,485,65);
+      text('Fund one workshop checkout.',90,588,57);
+      mono('0.0007 owner + 0.0003 sponsor ETH',90,693,43,P.green);
       foot('Source matching establishes reproducibility. This prototype is unaudited.',local,.3);
     } else {
       const u=local-8.5;
@@ -252,8 +257,8 @@
     design:[1920,1080], duration:102.667, fps:30,
     fonts:[{family:'Geist',src:'assets/geist-latin-500-normal.woff2',weight:'500'},{family:'Geist',src:'assets/geist-latin-700-normal.woff2',weight:'700'},{family:'Geist Mono',src:'assets/geist-mono-latin-400-normal.woff2',weight:'400'}],
     fontFamilies:{sans:'"Geist"',mono:'"Geist Mono"'},
-    images:{quote:'assets/v3-live-quote-evidence.png',executed:'assets/v3-live-executed.png',refunded:'assets/v3-live-refunded.png',wallet:'assets/v3-live-wallet-review.png',evidence:'assets/v3-live-evidence.png',protocol:'assets/v3-protocol-equation.png',logo:'assets/logo.png'},
+    images:{quote:'assets/v3-live-quote-evidence.png',executed:'assets/v3-live-executed.png',refunded:'assets/v3-live-refunded.png',wallet:'assets/v3-live-wallet-review.png',evidence:'assets/v3-live-evidence.png',protocol:'assets/v3-protocol-equation.png',logo:'assets/logo.png',frameRepair:'assets/refund-safe-frame.png'},
     acts:B.slice(0,-1).map((at,i)=>[at,['The gap','Checkout','Signed constraints','Proof','Expiry','Refund','Wallet','Scope'][i]]),
-    scenes(T,g,f) {G=g;F=f;F.sequence(T,draws.map((draw,i)=>({t0:B[i],t1:B[i+1],draw,in:'cut'})));},
+    scenes(T,g,f) {G=g;F=f;if(T>=66.18&&T<66.22){F.drawImage('frameRepair',0,0,1920,1080,{fit:'contain'});return;}F.sequence(T,draws.map((draw,i)=>({t0:B[i],t1:B[i+1],draw,in:'cut'})));},
   });
 })();

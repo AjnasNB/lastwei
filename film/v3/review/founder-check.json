@@ -27,14 +27,21 @@
       "reading": true
     },
     "flash_exempt": 0,
-    "texts": 75,
+    "texts": 78,
     "smallest": {
-      "text": "After expiry: reclaim",
+      "text": "Signed payment",
       "px": 32,
       "pt": 6.5,
-      "t": 57.5
+      "t": 19.73
     },
     "smallest_texts": [
+      {
+        "text": "Signed payment",
+        "px": 32,
+        "pt": 6.5,
+        "t": 19.73,
+        "caption": false
+      },
       {
         "text": "After expiry: reclaim",
         "px": 32,
@@ -50,9 +57,9 @@
         "caption": false
       },
       {
-        "text": "Signed payment",
-        "px": 34,
-        "pt": 6.9,
+        "text": "Existing workaround",
+        "px": 35,
+        "pt": 7.1,
         "t": 19.73,
         "caption": false
       },
@@ -82,13 +89,6 @@
         "px": 36,
         "pt": 7.3,
         "t": 19.73,
-        "caption": false
-      },
-      {
-        "text": "Sponsor exactly this gap",
-        "px": 36,
-        "pt": 7.3,
-        "t": 32,
         "caption": false
       }
     ],
@@ -157,21 +157,89 @@
     },
     {
       "severity": "info",
-      "code": "small_text",
-      "message": "canvas text \"Account 0x2ad9e730...52445193\" is 22px (decor) (hard to read on phones below ~36px)",
+      "code": "title_safe",
+      "message": "canvas text \"Existing workaround\" is within 5% of the frame edge at 0:30.80",
       "t": 30.8,
-      "source": "canvas",
-      "px": 22,
-      "text": "Account 0x2ad9e730...52…"
+      "source": "canvas"
     },
     {
       "severity": "info",
       "code": "small_text",
-      "message": "canvas text \"Base Sepolia · 84532\" is 22px (decor) (hard to read on phones below ~36px)",
+      "message": "14 small labels, 17-19px (e.g. \"EIP-712\", \"Target\", \"0x0407348FF53...A01ee49…\", \"Payment value\"); text under ~36px is hard to read on phones",
       "t": 30.8,
-      "source": "canvas",
-      "px": 22,
-      "text": "Base Sepolia · 84532"
+      "count": 14,
+      "items": [
+        {
+          "t": 30.8,
+          "text": "EIP-712",
+          "px": 18
+        },
+        {
+          "t": 30.8,
+          "text": "Target",
+          "px": 18
+        },
+        {
+          "t": 30.8,
+          "text": "0x0407348FF53...A01ee49…",
+          "px": 19
+        },
+        {
+          "t": 30.8,
+          "text": "Payment value",
+          "px": 18
+        },
+        {
+          "t": 30.8,
+          "text": "Calldata",
+          "px": 18
+        },
+        {
+          "t": 30.8,
+          "text": "purchase(beneficiary)",
+          "px": 19
+        },
+        {
+          "t": 30.8,
+          "text": "Data hash",
+          "px": 18
+        },
+        {
+          "t": 30.8,
+          "text": "0x8d1f72cce33...b8c647c…",
+          "px": 19
+        },
+        {
+          "t": 30.8,
+          "text": "Nonce",
+          "px": 18
+        },
+        {
+          "t": 30.8,
+          "text": "2779214020555...1318555…",
+          "px": 19
+        },
+        {
+          "t": 30.8,
+          "text": "Deadline",
+          "px": 18
+        },
+        {
+          "t": 30.8,
+          "text": "2026-10-13 04:32:46 UTC",
+          "px": 19
+        },
+        {
+          "t": 30.8,
+          "text": "Account 0x2ad9e730...52…",
+          "px": 17
+        },
+        {
+          "t": 30.8,
+          "text": "Base Sepolia · 84532",
+          "px": 17
+        }
+      ]
     },
     {
       "severity": "info",
