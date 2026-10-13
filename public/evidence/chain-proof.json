@@ -1,0 +1,140 @@
+{
+  "verifiedAt": "2026-10-13T04:36:17.247Z",
+  "chainId": 84532,
+  "proof": [
+    {
+      "run": {
+        "id": "d115b70c-e493-4709-b1b3-ac2a8575cf1b",
+        "kind": "complete",
+        "status": "executed",
+        "created_at": 1791865362,
+        "updated_at": 1791865378,
+        "deadline": 1791865966,
+        "intent_id": "0x6d63fb2fb6e9da5a3a7f094ba10f9b801cb79fdd664d129fb57254ce6225b927",
+        "fund_tx": "0x78476f0f355288b45f734bae5490c9b15680265183768f9f9ac5dcb5b0f3d610",
+        "execute_tx": "0x43961b25026edbba7b9632b032fa467f5036e9f1fa44933c2070e142935a5f1f",
+        "reclaim_tx": null,
+        "refund_tx": null,
+        "error": null
+      },
+      "receipts": [
+        {
+          "step": "fund_tx",
+          "hash": "0x78476f0f355288b45f734bae5490c9b15680265183768f9f9ac5dcb5b0f3d610",
+          "block": "48048540",
+          "status": "success",
+          "events": [
+            {
+              "name": "Funded",
+              "args": {
+                "intentId": "0x6d63fb2fb6e9da5a3a7f094ba10f9b801cb79fdd664d129fb57254ce6225b927",
+                "sponsor": "0xc1f99c08c943Af295838567D041F5f207E6AdB62",
+                "target": "0x0407348FF5372e0A49e92CF364d408A01ee49027",
+                "value": "1000000000000000",
+                "contribution": "700000000000000",
+                "nonce": "277921402055512697045550223521318555419",
+                "deadline": "1791865966"
+              }
+            }
+          ]
+        },
+        {
+          "step": "execute_tx",
+          "hash": "0x43961b25026edbba7b9632b032fa467f5036e9f1fa44933c2070e142935a5f1f",
+          "block": "48048544",
+          "status": "success",
+          "events": [
+            {
+              "name": "Purchased",
+              "args": {
+                "beneficiary": "0x3328Bf7790D1035A5d5B36E58c6cd3a20B3836f9",
+                "payer": "0x2Ad9e730C902D30Ef267dBcEEFcE859752445193",
+                "receiptId": "1",
+                "value": "1000000000000000"
+              }
+            },
+            {
+              "name": "Executed",
+              "args": {
+                "intentId": "0x6d63fb2fb6e9da5a3a7f094ba10f9b801cb79fdd664d129fb57254ce6225b927",
+                "executor": "0xc1f99c08c943Af295838567D041F5f207E6AdB62",
+                "resultHash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "run": {
+        "id": "c79e67ac-7861-461d-8c35-f5eed53a6ded",
+        "kind": "refund",
+        "status": "refunded",
+        "created_at": 1791865665,
+        "updated_at": 1791865728,
+        "deadline": 1791865715,
+        "intent_id": "0x425d5d85c24dba2f9c5b4528986ff6f2aeb7d8c4e6d6817a1fe52911d4985622",
+        "fund_tx": "0x9b0717efd5799925b3940fdb6a2a08ea6f2bbd2c59bc067fa85d516736560417",
+        "execute_tx": null,
+        "reclaim_tx": "0x9439996ff1b2c9dcbfa431779cbe09154a531ca373753d747ab5c4647078f15e",
+        "refund_tx": "0x891440d1b8c820b5e0cb79f36f661dae35bbc5ae751e762fa213f6277f5f9272",
+        "error": null
+      },
+      "receipts": [
+        {
+          "step": "fund_tx",
+          "hash": "0x9b0717efd5799925b3940fdb6a2a08ea6f2bbd2c59bc067fa85d516736560417",
+          "block": "48048692",
+          "status": "success",
+          "events": [
+            {
+              "name": "Funded",
+              "args": {
+                "intentId": "0x425d5d85c24dba2f9c5b4528986ff6f2aeb7d8c4e6d6817a1fe52911d4985622",
+                "sponsor": "0xc1f99c08c943Af295838567D041F5f207E6AdB62",
+                "target": "0x0407348FF5372e0A49e92CF364d408A01ee49027",
+                "value": "1000000000000000",
+                "contribution": "700000000000000",
+                "nonce": "265338856817535688142461814107113418221",
+                "deadline": "1791865715"
+              }
+            }
+          ]
+        },
+        {
+          "step": "reclaim_tx",
+          "hash": "0x9439996ff1b2c9dcbfa431779cbe09154a531ca373753d747ab5c4647078f15e",
+          "block": "48048716",
+          "status": "success",
+          "events": [
+            {
+              "name": "Released",
+              "args": {
+                "intentId": "0x425d5d85c24dba2f9c5b4528986ff6f2aeb7d8c4e6d6817a1fe52911d4985622",
+                "sponsor": "0xc1f99c08c943Af295838567D041F5f207E6AdB62",
+                "refund": "300000000000000",
+                "status": 3
+              }
+            }
+          ]
+        },
+        {
+          "step": "refund_tx",
+          "hash": "0x891440d1b8c820b5e0cb79f36f661dae35bbc5ae751e762fa213f6277f5f9272",
+          "block": "48048719",
+          "status": "success",
+          "events": [
+            {
+              "name": "RefundWithdrawn",
+              "args": {
+                "sponsor": "0xc1f99c08c943Af295838567D041F5f207E6AdB62",
+                "recipient": "0xc1f99c08c943Af295838567D041F5f207E6AdB62",
+                "amount": "300000000000000"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

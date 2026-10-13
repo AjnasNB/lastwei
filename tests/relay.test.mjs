@@ -1,9 +1,97 @@
-import {test} from 'node:test';
-import assert from 'node:assert/strict';
-import {validRunId,validStart,allowedOrigin,publicRun,limitedBody} from '../worker/policy.ts';
-test('relay accepts only UUID v4 idempotency keys',()=>{assert.equal(validRunId('af7b5a02-d3cd-4f23-9f5d-39e35e94d787'),true);for(const v of [null,'','../private/key','af7b5a02-d3cd-1f23-9f5d-39e35e94d787','0xabc'])assert.equal(validRunId(v),false);});
-test('relay request cannot name arbitrary targets, values or methods',()=>{assert.equal(validStart({id:'af7b5a02-d3cd-4f23-9f5d-39e35e94d787',kind:'complete'}),true);for(const kind of ['withdraw','transfer','execute',''])assert.equal(validStart({id:'af7b5a02-d3cd-4f23-9f5d-39e35e94d787',kind}),false);});
-test('write routes accept only the site or its fixed Azure mirror origin',()=>{assert.equal(allowedOrigin('https://lastwei.example','https://lastwei.example/api/demo'),true);assert.equal(allowedOrigin('https://attacker.example','https://lastwei.example/api/demo'),false);assert.equal(allowedOrigin(null,'https://lastwei.example/api/demo'),false);assert.equal(allowedOrigin('https://wonderful-meadow-00299ce00.4.azurestaticapps.net','https://lastwei.example/api/demo'),true);});
-test('API responses exclude client hashes, leases and signed raw transactions',()=>{assert.deepEqual(publicRun({id:'run',status:'funded',client_hash:'private',lease_until:100,pending_raw:'0x01'}),{id:'run',status:'funded'});});
-test('relay refuses arbitrary target fields rather than silently accepting them',()=>{assert.equal(validStart({id:'af7b5a02-d3cd-4f23-9f5d-39e35e94d787',kind:'complete',target:'0x123'}),false);});
-test('request reader enforces byte limits even without a content length',async()=>{await assert.rejects(limitedBody(new Request('https://site.test',{method:'POST',body:'x'.repeat(1025)})),/Request too large/);assert.equal(await limitedBody(new Request('https://site.test',{method:'POST',body:'{}'})),'{}');});
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import {
+  validRunId,
+  validStart,
+  allowedOrigin,
+  publicRun,
+  limitedBody,
+} from "../worker/policy.ts";
+test("relay accepts only UUID v4 idempotency keys", () => {
+  assert.equal(validRunId("af7b5a02-d3cd-4f23-9f5d-39e35e94d787"), true);
+  for (const v of [
+    null,
+    "",
+    "../private/key",
+    "af7b5a02-d3cd-1f23-9f5d-39e35e94d787",
+    "0xabc",
+  ])
+    assert.equal(validRunId(v), false);
+});
+test("relay request cannot name arbitrary targets, values or methods", () => {
+  assert.equal(
+    validStart({
+      id: "af7b5a02-d3cd-4f23-9f5d-39e35e94d787",
+      kind: "complete",
+    }),
+    true,
+  );
+  for (const kind of ["withdraw", "transfer", "execute", ""])
+    assert.equal(
+      validStart({ id: "af7b5a02-d3cd-4f23-9f5d-39e35e94d787", kind }),
+      false,
+    );
+});
+test("write routes accept only the site or its fixed Azure mirror origin", () => {
+  assert.equal(
+    allowedOrigin(
+      "https://lastwei.example",
+      "https://lastwei.example/api/demo",
+    ),
+    true,
+  );
+  assert.equal(
+    allowedOrigin(
+      "https://attacker.example",
+      "https://lastwei.example/api/demo",
+    ),
+    false,
+  );
+  assert.equal(allowedOrigin(null, "https://lastwei.example/api/demo"), false);
+  assert.equal(
+    allowedOrigin(
+      "https://wonderful-meadow-00299ce00.4.azurestaticapps.net",
+      "https://lastwei.example/api/demo",
+    ),
+    true,
+  );
+});
+test("API responses exclude client hashes, leases and signed raw transactions", () => {
+  assert.deepEqual(
+    publicRun({
+      id: "run",
+      status: "funded",
+      client_hash: "private",
+      lease_until: 100,
+      pending_raw: "0x01",
+    }),
+    { id: "run", status: "funded" },
+  );
+});
+test("relay refuses arbitrary target fields rather than silently accepting them", () => {
+  assert.equal(
+    validStart({
+      id: "af7b5a02-d3cd-4f23-9f5d-39e35e94d787",
+      kind: "complete",
+      target: "0x123",
+    }),
+    false,
+  );
+});
+test("request reader enforces byte limits even without a content length", async () => {
+  await assert.rejects(
+    limitedBody(
+      new Request("https://site.test", {
+        method: "POST",
+        body: "x".repeat(1025),
+      }),
+    ),
+    /Request too large/,
+  );
+  assert.equal(
+    await limitedBody(
+      new Request("https://site.test", { method: "POST", body: "{}" }),
+    ),
+    "{}",
+  );
+});

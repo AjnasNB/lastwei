@@ -1,11 +1,24 @@
-import fs from 'node:fs';
-import {randomBytes} from 'node:crypto';
-const sponsor=JSON.parse(fs.readFileSync('private/testnet-wallet.json','utf8'));
-const owner=JSON.parse(fs.readFileSync('private/demo-owner.json','utf8'));
-const file='private/cloudflare-secrets.json';
-let salt=randomBytes(32).toString('hex');
-if(fs.existsSync(file))salt=JSON.parse(fs.readFileSync(file,'utf8')).IP_HASH_SALT;
-const secrets={SPONSOR_PRIVATE_KEY:sponsor.privateKey,DEMO_OWNER_PRIVATE_KEY:owner.privateKey,IP_HASH_SALT:salt};
-fs.writeFileSync(file,JSON.stringify(secrets),{mode:0o600});
-fs.writeFileSync('.dev.vars',Object.entries(secrets).map(([k,v])=>`${k}=${v}`).join('\n'),{mode:0o600});
-console.log('Prepared ignored testnet secret files. No secret values printed.');
+import fs from "node:fs";
+import { randomBytes } from "node:crypto";
+const sponsor = JSON.parse(
+  fs.readFileSync("private/testnet-wallet.json", "utf8"),
+);
+const owner = JSON.parse(fs.readFileSync("private/demo-owner.json", "utf8"));
+const file = "private/cloudflare-secrets.json";
+let salt = randomBytes(32).toString("hex");
+if (fs.existsSync(file))
+  salt = JSON.parse(fs.readFileSync(file, "utf8")).IP_HASH_SALT;
+const secrets = {
+  SPONSOR_PRIVATE_KEY: sponsor.privateKey,
+  DEMO_OWNER_PRIVATE_KEY: owner.privateKey,
+  IP_HASH_SALT: salt,
+};
+fs.writeFileSync(file, JSON.stringify(secrets), { mode: 0o600 });
+fs.writeFileSync(
+  ".dev.vars",
+  Object.entries(secrets)
+    .map(([k, v]) => `${k}=${v}`)
+    .join("\n"),
+  { mode: 0o600 },
+);
+console.log("Prepared ignored testnet secret files. No secret values printed.");

@@ -33,6 +33,7 @@
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
     "ganache": "^7.9.2",
+    "prettier": "^3.9.10",
     "solc": "^0.8.37",
     "typescript": "^7.0.2",
     "vite": "^8.3.4",

@@ -1,5 +1,14 @@
 node_modules/
 dist/
+dist-azure/
+film/*.webm
+film/*.mp4
+film/audio/
+film/look/
+film/look-final/
+film/captures/
+.swa/
+*.cpuprofile
 .wrangler/
 .qarinah/
 .env*

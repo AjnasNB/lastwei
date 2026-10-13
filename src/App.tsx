@@ -1,81 +1,791 @@
-import {useEffect,useState,lazy,Suspense} from 'react';
-import {ArrowUpRight,ArrowRight,Check,ShieldCheck,Clock,Code,Wallet,Receipt,Lightning,ArrowCounterClockwise,Copy,Info,LinkSimple} from '@phosphor-icons/react';
-import {api,type NetworkConfig,type DemoRun} from './api';
-const WalletPanel=lazy(()=>import('./WalletPanel').then(m=>({default:m.WalletPanel})));
+import { useEffect, useState, lazy, Suspense } from "react";
+import {
+  ArrowUpRight,
+  ArrowRight,
+  Check,
+  ShieldCheck,
+  Clock,
+  Code,
+  Wallet,
+  Receipt,
+  Lightning,
+  ArrowCounterClockwise,
+  Copy,
+  Info,
+  LinkSimple,
+} from "@phosphor-icons/react";
+import { api, type NetworkConfig, type DemoRun } from "./api";
+const WalletPanel = lazy(() =>
+  import("./WalletPanel").then((m) => ({ default: m.WalletPanel })),
+);
 
-const repo='https://github.com/AjnasNB/lastwei';
-const terminalStates=['executed','refunded','failed'];
-const statusLabels:Record<string,string>={queued:'Preparing signed intent',fund_pending:'Confirming sponsor funding',funded:'Funds locked to your action',execute_pending:'Confirming execution',executed:'Action completed',awaiting_expiry:'Waiting for on-chain expiry',reclaim_pending:'Returning locked contributions',refund_pending:'Confirming sponsor withdrawal',refunded:'Sponsor refunded',failed:'Demo needs attention'};
-export function App(){
-  const [route,setRoute]=useState(location.hash.slice(1)||'complete');
-  const [mode,setMode]=useState<'simulation'|'live'>(new URLSearchParams(location.search).get('demo')==='live'?'live':'simulation');
-  const [config,setConfig]=useState<NetworkConfig|null>(null);
-  const [configError,setConfigError]=useState('');
-  const [kind,setKind]=useState<'complete'|'refund'>('complete');
-  const [contribution,setContribution]=useState(70);
-  const [simStage,setSimStage]=useState(0);
-  const [simBusy,setSimBusy]=useState(false);
-  const [run,setRun]=useState<DemoRun|null>(null);
-  const [busy,setBusy]=useState(false);
-  const [error,setError]=useState('');
-  const [now,setNow]=useState(Date.now());
-  const [copied,setCopied]=useState(false);
-  useEffect(()=>{const changed=()=>setRoute(location.hash.slice(1)||'complete');window.addEventListener('hashchange',changed);return()=>window.removeEventListener('hashchange',changed);},[]);
-  useEffect(()=>{let active=true;api<NetworkConfig>('/config').then(c=>{if(active){setConfig(c);setConfigError('');}}).catch(()=>{if(active)setConfigError('Sepolia connection unavailable. Simulation is still available.');});return()=>{active=false;};},[]);
-  useEffect(()=>{const timer=setInterval(()=>setNow(Date.now()),1000);return()=>clearInterval(timer);},[]);
-  useEffect(()=>{
-    if(!simBusy)return;const timer=setTimeout(()=>{setSimStage(s=>s+1);if(simStage>=2)setSimBusy(false);},simStage===1&&kind==='refund'?1400:700);return()=>clearTimeout(timer);
-  },[simBusy,simStage,kind]);
-  useEffect(()=>{
-    const id=sessionStorage.getItem('lastwei-run');if(id)api<DemoRun>(`/demo/${id}`).then(setRun).catch(()=>sessionStorage.removeItem('lastwei-run'));
-  },[]);
-  useEffect(()=>{
-    if(!run||terminalStates.includes(run.status))return;let active=true;
-    const timer=setTimeout(()=>{api<DemoRun>(`/demo/${run.id}/advance`,{}).then(r=>{if(active){setRun(r);setError('');}}).catch(e=>{if(active){setError(e.message);setRun(r=>r?{...r}:r);}});},3000);
-    return()=>{active=false;clearTimeout(timer);};
-  },[run]);
-  async function startLive(){setError('');setBusy(true);try{const r=await api<DemoRun>('/demo',{id:crypto.randomUUID(),kind});sessionStorage.setItem('lastwei-run',r.id);setRun(r);setConfig(c=>c?{...c,remaining:Math.max(0,c.remaining-1)}:c);}catch(e){setError(e instanceof Error?e.message:'Unable to start demo.');}finally{setBusy(false);}}
-  const liveBusy=!!run&&!terminalStates.includes(run.status);
-  const currentKind=mode==='live'&&run?run.kind:kind;
-  const pct=mode==='live'?70:contribution;
-  const shortfall=((100-pct)/100*0.001).toFixed(5);
-  const funded=mode==='simulation'?simStage>=1:!!run&&!['queued','fund_pending','failed'].includes(run.status);
-  const settled=mode==='simulation'?simStage>=3:run?.status==='executed'||run?.status==='refunded';
-  const stage=mode==='simulation'?simStage:run?.status==='executed'||run?.status==='refunded'?3:run?.status==='funded'||run?.status==='execute_pending'||run?.status==='awaiting_expiry'||run?.status==='reclaim_pending'||run?.status==='refund_pending'?2:run?.fund_tx?1:0;
-  const waiting=run?.status==='awaiting_expiry'?Math.max(0,(run.deadline??0)-Math.floor(now/1000)):0;
-  const progressTitle=settled?(currentKind==='refund'?'Sponsorship returned.':'You’re all set.'):funded?'Locked to one action.':'A little short. A lot simpler.';
-  return <div className="app">
-    <a className="skip" href="#main">Skip to content</a>
-    <header className="topbar"><a href="#complete" className="brand" aria-label="LastWei home"><span className="brand-symbol">L<span>↗</span></span><span>LastWei<span className="brand-caption">Finish the transaction</span></span></a><div className="header-right"><span className="network"><span className="status-dot"/>Base Sepolia</span><a className="icon-link" href={repo} target="_blank" rel="noreferrer"><Code size={18}/> <span>Source</span><ArrowUpRight size={14}/></a></div></header>
-    <div className="shell"><aside className="sidebar"><div className="sidebar-label">WORKSPACE</div><nav aria-label="Main navigation"><a href="#complete" aria-current={route==='complete'?'page':undefined}><Lightning size={20}/>Complete an action</a><a href="#wallet" aria-current={route==='wallet'?'page':undefined}><Wallet size={20}/>Use your wallet</a><a href="#protocol" aria-current={route==='protocol'?'page':undefined}><ShieldCheck size={20}/>How it works</a></nav><div className="sidebar-bottom"><div className="outline-icon"><ShieldCheck size={24}/></div><strong>One action. Exact funding.</strong><p>Sponsor funds stay bound to the payment you authorize.</p><a href={`${repo}/blob/main/docs/SECURITY.md`} target="_blank" rel="noreferrer">Read the trust model <ArrowUpRight size={14}/></a></div><div className="sidebar-foot">COLOSSEUM · WORLD’S FAIR 2026</div></aside>
-    <main id="main" className="main" tabIndex={-1}>
-    {route==='wallet'?<><div className="eyebrow">YOUR ACCOUNT / BASE SEPOLIA</div><h1>Bring your own intent.</h1><p className="intro">Sign a specific payment. Share its exact shortfall with a sponsor.</p><Suspense fallback={<p className="wallet-status" role="status">Loading wallet tools…</p>}><WalletPanel config={config}/></Suspense></>:route==='protocol'?<Protocol config={config}/>:<>
-      <div className="page-heading"><div><div className="eyebrow">INTENT-LOCKED SPONSORSHIP</div><h1>Get to the last step.</h1><p className="intro">Missing a little ETH shouldn’t mean starting over.</p></div><div className="mode-picker" role="group" aria-label="Demo environment"><button type="button" aria-pressed={mode==='simulation'} onClick={()=>{setMode('simulation');setError('');}}>Simulation</button><button type="button" aria-pressed={mode==='live'} onClick={()=>{setMode('live');setError('');}}>Sepolia live <span className="small-dot"/></button></div></div>
-      <div className={`mode-note ${mode==='live'?'live-note':''}`}><Info size={18}/><span>{mode==='simulation'?'Interactive simulation. No wallet, blockchain transactions, or real funds.':'Real Sepolia transactions using pre-funded demo accounts. No wallet needed. Test ETH only.'}</span></div>
-      <div className="workspace-grid"><section className="action-panel" aria-labelledby="action-title"><div className="panel-top"><span className="eyebrow">01 / YOUR ACTION</span><span className="tag">Sample checkout</span></div><div className="merchant"><div className="merchant-mark"><Code size={28}/></div><div><h2 id="action-title">Builder workshop pass</h2><p>On-chain, non-transferable demo receipt</p></div><span className="merchant-price">0.001<span>ETH</span></span></div><div className="action-divider"/>
-      <div className="funding-heading"><h3>Only fund what’s missing.</h3><span className="mono">{pct}% available</span></div><div className="funding-bar" role="progressbar" aria-label="Owner contribution" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}><span style={{width:`${pct}%`}}/><span className={funded?'filled':''} style={{width:`${100-pct}%`}}/></div><div className="bar-legend"><span><i className="legend-owner"/>Your contribution</span><span><i className="legend-sponsor"/>Sponsor shortfall</span></div>
-      <dl className="amounts"><div><dt>Action value</dt><dd>0.00100 <span>ETH</span></dd></div><div><dt>Available in intent account</dt><dd>{(pct/100*0.001).toFixed(5)} <span>ETH</span></dd></div><div className="missing-row"><dt>{funded?'Sponsor contribution':'You’re missing'}</dt><dd>{shortfall} <span>ETH</span></dd></div></dl>
-      {mode==='simulation'&&!simBusy&&simStage===0&&<div className="range-field"><label htmlFor="contribution">Try a different contribution</label><input id="contribution" type="range" min="0" max="95" step="5" value={contribution} onChange={e=>setContribution(Number(e.target.value))}/></div>}
-      <div className="scenario-picker"><label htmlFor="scenario">Demo outcome</label><select id="scenario" value={currentKind} disabled={simBusy||liveBusy} onChange={e=>{setKind(e.target.value as 'complete'|'refund');setSimStage(0);if(mode==='live'){setRun(null);sessionStorage.removeItem('lastwei-run');}}}><option value="complete">Complete the payment</option><option value="refund">Expire and refund the sponsor</option></select></div>
-      <button type="button" className="primary wide" disabled={mode==='simulation'?simBusy:busy||liveBusy||!config?.ready||config.remaining===0} onClick={mode==='simulation'?()=>{setSimStage(0);setSimBusy(true);}:startLive}>{mode==='simulation'?simBusy?'Walking through the intent…':simStage===3?'Run again':'Run simulation':busy?'Preparing…':liveBusy?'Transaction in progress…':config?.ready?'Run Sepolia demo':'Sepolia demo preparing'}<ArrowRight size={18}/></button>
-      <div className="button-note"><ShieldCheck size={15}/>{mode==='live'?'The demo sponsor pays execution gas.':'Sponsor funding cannot be withdrawn as a wallet top-up.'}</div>
-      {mode==='live'&&config&&<p className="budget">{config.remaining} public demo runs remaining · globally capped testnet budget</p>}
-      {error&&<div className="error" role="alert">{error}<button type="button" onClick={()=>{if(run){api<DemoRun>(`/demo/${run.id}/advance`,{}).then(setRun).catch(e=>setError(e.message));}else startLive();}}>Retry</button></div>}{configError&&mode==='live'&&<p className="error" role="alert">{configError}</p>}
-      </section>
-      <section className="settlement-panel" aria-labelledby="settlement-title"><div className="panel-top"><span className="eyebrow">02 / SETTLEMENT</span><span className={`tag ${settled?'success':''}`}>{settled?'Settled':funded?'In progress':'Ready'}</span></div><div className="settlement-visual"><div className={`orbit ${settled?'complete':''}`}><div className="orbit-core">{settled?currentKind==='refund'?<ArrowCounterClockwise size={36}/>:<Check size={40}/>:<Lightning size={36}/>}</div><span className="orbit-node node-a"/><span className="orbit-node node-b"/><span className="orbit-node node-c"/></div></div><h2 id="settlement-title">{progressTitle}</h2><p className="settlement-description">{settled?currentKind==='refund'?'The owner contribution is available again. The sponsor’s shortfall is returned.':'The checkout received the full payment. The intended beneficiary gets the receipt.':'Your signature binds the destination, payment, calldata, nonce, and deadline.'}</p>
-      <ol className="steps">{[
-        ['Authorize the exact action','EIP-712 signature · account + chain bound'],
-        ['Lock the missing value',`${shortfall} ETH · dedicated sponsor escrow`],
-        [currentKind==='refund'?'Expire and return funds':'Execute the authorized payment',currentKind==='refund'?'Permissionless reclaim · sponsor-only withdrawal':'Atomic call · relayer pays gas'],
-      ].map(([label,desc],i)=><li key={label} className={stage>i?'done':stage===i&&(simBusy||liveBusy)?'active':''}><span className="step-number">{stage>i?<Check size={14}/>:String(i+1).padStart(2,'0')}</span><div><strong>{label}</strong><span>{desc}</span></div></li>)}</ol>
-      <div className="execution-status" role="status" aria-live="polite"><span className="status-dot"/>{mode==='simulation'?(simStage===3?`Simulation ${currentKind==='refund'?'refunded':'completed'}`:simBusy?'Simulating contract lifecycle':'Waiting for your action'):run?(statusLabels[run.status]??run.status)+(waiting?` · ${waiting}s`: ''):'Ready to run on Sepolia'}</div>
-      {mode==='live'&&run&&<div className="receipt-links">{[['Funding',run.fund_tx],['Execution',run.execute_tx],['Reclaim',run.reclaim_tx],['Refund',run.refund_tx]].filter(([,hash])=>hash).map(([name,hash])=><a key={name} href={`https://sepolia.basescan.org/tx/${hash}`} target="_blank" rel="noreferrer">{name} receipt <ArrowUpRight size={14}/></a>)}{run.intent_id&&<button type="button" className="text-button" onClick={()=>{navigator.clipboard.writeText(run.intent_id!).then(()=>setCopied(true)).catch(()=>setError('Clipboard unavailable. Intent ID is in the receipt.'));}}><Copy size={14}/>{copied?'Copied':'Copy intent ID'}</button>}{run.error&&<p className="error">{run.error}</p>}</div>}
-      </section></div>
-      <section className="assurance"><div><ShieldCheck size={21}/><strong>Intent-locked</strong><span>Exact target, calldata, and value</span></div><div><Clock size={21}/><strong>Refundable</strong><span>Expired funds return to the sponsor</span></div><div><Receipt size={21}/><strong>Verifiable</strong><span>Every live action leaves a receipt</span></div></section>
-      <div className="next-step"><div><span className="eyebrow">FROM DEMO TO YOUR WALLET</span><p>Your own account. Your signature. Your sponsor.</p></div><a href="#wallet">Use your wallet <ArrowUpRight size={17}/></a></div>
-    </>}
-    <footer><span>LastWei · Open-source testnet prototype</span><div><a href={`${repo}/blob/main/docs/SECURITY.md`} target="_blank" rel="noreferrer">Security & limitations</a><a href="https://colosseum.com/arena/projects/lastwei" target="_blank" rel="noreferrer">Colosseum <ArrowUpRight size={12}/></a></div></footer>
-    </main></div>
-  </div>;
+const repo = "https://github.com/AjnasNB/lastwei";
+const terminalStates = ["executed", "refunded", "failed"];
+const statusLabels: Record<string, string> = {
+  queued: "Preparing signed intent",
+  fund_pending: "Confirming sponsor funding",
+  funded: "Funds locked to your action",
+  execute_pending: "Confirming execution",
+  executed: "Action completed",
+  awaiting_expiry: "Waiting for on-chain expiry",
+  reclaim_pending: "Returning locked contributions",
+  refund_pending: "Confirming sponsor withdrawal",
+  refunded: "Sponsor refunded",
+  failed: "Demo needs attention",
+};
+export function App() {
+  const [route, setRoute] = useState(location.hash.slice(1) || "complete");
+  const [mode, setMode] = useState<"simulation" | "live">(
+    new URLSearchParams(location.search).get("demo") === "live"
+      ? "live"
+      : "simulation",
+  );
+  const [config, setConfig] = useState<NetworkConfig | null>(null);
+  const [configError, setConfigError] = useState("");
+  const [kind, setKind] = useState<"complete" | "refund">("complete");
+  const [contribution, setContribution] = useState(70);
+  const [simStage, setSimStage] = useState(0);
+  const [simBusy, setSimBusy] = useState(false);
+  const [run, setRun] = useState<DemoRun | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [now, setNow] = useState(Date.now());
+  const [copied, setCopied] = useState(false);
+  useEffect(() => {
+    const changed = () => setRoute(location.hash.slice(1) || "complete");
+    window.addEventListener("hashchange", changed);
+    return () => window.removeEventListener("hashchange", changed);
+  }, []);
+  useEffect(() => {
+    let active = true;
+    api<NetworkConfig>("/config")
+      .then((c) => {
+        if (active) {
+          setConfig(c);
+          setConfigError("");
+        }
+      })
+      .catch(() => {
+        if (active)
+          setConfigError(
+            "Sepolia connection unavailable. Simulation is still available.",
+          );
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+  useEffect(() => {
+    if (!simBusy) return;
+    const timer = setTimeout(
+      () => {
+        setSimStage((s) => s + 1);
+        if (simStage >= 2) setSimBusy(false);
+      },
+      simStage === 1 && kind === "refund" ? 1400 : 700,
+    );
+    return () => clearTimeout(timer);
+  }, [simBusy, simStage, kind]);
+  useEffect(() => {
+    const id = sessionStorage.getItem("lastwei-run");
+    if (id)
+      api<DemoRun>(`/demo/${id}`)
+        .then(setRun)
+        .catch(() => sessionStorage.removeItem("lastwei-run"));
+  }, []);
+  useEffect(() => {
+    if (!run || terminalStates.includes(run.status)) return;
+    let active = true;
+    const timer = setTimeout(() => {
+      api<DemoRun>(`/demo/${run.id}/advance`, {})
+        .then((r) => {
+          if (active) {
+            setRun(r);
+            setError("");
+          }
+        })
+        .catch((e) => {
+          if (active) {
+            setError(e.message);
+            setRun((r) => (r ? { ...r } : r));
+          }
+        });
+    }, 3000);
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
+  }, [run]);
+  async function startLive() {
+    setError("");
+    setBusy(true);
+    try {
+      const r = await api<DemoRun>("/demo", { id: crypto.randomUUID(), kind });
+      sessionStorage.setItem("lastwei-run", r.id);
+      setRun(r);
+      setConfig((c) =>
+        c ? { ...c, remaining: Math.max(0, c.remaining - 1) } : c,
+      );
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Unable to start demo.");
+    } finally {
+      setBusy(false);
+    }
+  }
+  const liveBusy = !!run && !terminalStates.includes(run.status);
+  const currentKind = mode === "live" && run ? run.kind : kind;
+  const pct = mode === "live" ? 70 : contribution;
+  const shortfall = (((100 - pct) / 100) * 0.001).toFixed(5);
+  const funded =
+    mode === "simulation"
+      ? simStage >= 1
+      : !!run && !["queued", "fund_pending", "failed"].includes(run.status);
+  const settled =
+    mode === "simulation"
+      ? simStage >= 3
+      : run?.status === "executed" || run?.status === "refunded";
+  const stage =
+    mode === "simulation"
+      ? simStage
+      : run?.status === "executed" || run?.status === "refunded"
+        ? 3
+        : run?.status === "funded" ||
+            run?.status === "execute_pending" ||
+            run?.status === "awaiting_expiry" ||
+            run?.status === "reclaim_pending" ||
+            run?.status === "refund_pending"
+          ? 2
+          : run?.fund_tx
+            ? 1
+            : 0;
+  const waiting =
+    run?.status === "awaiting_expiry"
+      ? Math.max(0, (run.deadline ?? 0) - Math.floor(now / 1000))
+      : 0;
+  const progressTitle = settled
+    ? currentKind === "refund"
+      ? "Sponsorship returned."
+      : "You’re all set."
+    : funded
+      ? "Locked to one action."
+      : "A little short. A lot simpler.";
+  return (
+    <div className="app">
+      <a className="skip" href="#main">
+        Skip to content
+      </a>
+      <header className="topbar">
+        <a href="#complete" className="brand" aria-label="LastWei home">
+          <span className="brand-symbol">
+            L<span>↗</span>
+          </span>
+          <span>
+            LastWei<span className="brand-caption">Finish the transaction</span>
+          </span>
+        </a>
+        <div className="header-right">
+          <span className="network">
+            <span className="status-dot" />
+            Base Sepolia
+          </span>
+          <a
+            className="icon-link"
+            aria-label="View source on GitHub"
+            href={repo}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Code size={18} /> <span>Source</span>
+            <ArrowUpRight size={14} />
+          </a>
+        </div>
+      </header>
+      <div className="shell">
+        <aside className="sidebar">
+          <div className="sidebar-label">WORKSPACE</div>
+          <nav aria-label="Main navigation">
+            <a
+              href="#complete"
+              aria-current={route === "complete" ? "page" : undefined}
+            >
+              <Lightning size={20} />
+              Complete an action
+            </a>
+            <a
+              href="#wallet"
+              aria-current={route === "wallet" ? "page" : undefined}
+            >
+              <Wallet size={20} />
+              Use your wallet
+            </a>
+            <a
+              href="#protocol"
+              aria-current={route === "protocol" ? "page" : undefined}
+            >
+              <ShieldCheck size={20} />
+              How it works
+            </a>
+          </nav>
+          <div className="sidebar-bottom">
+            <div className="outline-icon">
+              <ShieldCheck size={24} />
+            </div>
+            <strong>One action. Exact funding.</strong>
+            <p>Sponsor funds stay bound to the payment you authorize.</p>
+            <a
+              href={`${repo}/blob/main/docs/SECURITY.md`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Read the trust model <ArrowUpRight size={14} />
+            </a>
+          </div>
+          <div className="sidebar-foot">COLOSSEUM · WORLD’S FAIR 2026</div>
+        </aside>
+        <main id="main" className="main" tabIndex={-1}>
+          {route === "wallet" ? (
+            <>
+              <div className="eyebrow">YOUR ACCOUNT / BASE SEPOLIA</div>
+              <h1>Bring your own intent.</h1>
+              <p className="intro">
+                Sign a specific payment. Share its exact shortfall with a
+                sponsor.
+              </p>
+              <Suspense
+                fallback={
+                  <p className="wallet-status" role="status">
+                    Loading wallet tools…
+                  </p>
+                }
+              >
+                <WalletPanel config={config} />
+              </Suspense>
+            </>
+          ) : route === "protocol" ? (
+            <Protocol config={config} />
+          ) : (
+            <>
+              <div className="page-heading">
+                <div>
+                  <div className="eyebrow">INTENT-LOCKED SPONSORSHIP</div>
+                  <h1>Get to the last step.</h1>
+                  <p className="intro">
+                    Missing a little ETH shouldn’t mean starting over.
+                  </p>
+                </div>
+                <div
+                  className="mode-picker"
+                  role="group"
+                  aria-label="Demo environment"
+                >
+                  <button
+                    type="button"
+                    aria-pressed={mode === "simulation"}
+                    onClick={() => {
+                      setMode("simulation");
+                      setError("");
+                    }}
+                  >
+                    Simulation
+                  </button>
+                  <button
+                    type="button"
+                    aria-pressed={mode === "live"}
+                    onClick={() => {
+                      setMode("live");
+                      setError("");
+                    }}
+                  >
+                    Sepolia live <span className="small-dot" />
+                  </button>
+                </div>
+              </div>
+              <div
+                className={`mode-note ${mode === "live" ? "live-note" : ""}`}
+              >
+                <Info size={18} />
+                <span>
+                  {mode === "simulation"
+                    ? "Interactive simulation. No wallet, blockchain transactions, or real funds."
+                    : "Real Sepolia transactions using pre-funded demo accounts. No wallet needed. Test ETH only."}
+                </span>
+              </div>
+              <div className="workspace-grid">
+                <section
+                  className="action-panel"
+                  aria-labelledby="action-title"
+                >
+                  <div className="panel-top">
+                    <span className="eyebrow">01 / YOUR ACTION</span>
+                    <span className="tag">Sample checkout</span>
+                  </div>
+                  <div className="merchant">
+                    <div className="merchant-mark">
+                      <Code size={28} />
+                    </div>
+                    <div>
+                      <h2 id="action-title">Builder workshop pass</h2>
+                      <p>On-chain, non-transferable demo receipt</p>
+                    </div>
+                    <span className="merchant-price">
+                      0.001<span>ETH</span>
+                    </span>
+                  </div>
+                  <div className="action-divider" />
+                  <div className="funding-heading">
+                    <h3>Only fund what’s missing.</h3>
+                    <span className="mono">{pct}% available</span>
+                  </div>
+                  <div
+                    className="funding-bar"
+                    role="progressbar"
+                    aria-label="Owner contribution"
+                    aria-valuenow={pct}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                  >
+                    <span style={{ width: `${pct}%` }} />
+                    <span
+                      className={funded ? "filled" : ""}
+                      style={{ width: `${100 - pct}%` }}
+                    />
+                  </div>
+                  <div className="bar-legend">
+                    <span>
+                      <i className="legend-owner" />
+                      Your contribution
+                    </span>
+                    <span>
+                      <i className="legend-sponsor" />
+                      Sponsor shortfall
+                    </span>
+                  </div>
+                  <dl className="amounts">
+                    <div>
+                      <dt>Action value</dt>
+                      <dd>
+                        0.00100 <span>ETH</span>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>Available in intent account</dt>
+                      <dd>
+                        {((pct / 100) * 0.001).toFixed(5)} <span>ETH</span>
+                      </dd>
+                    </div>
+                    <div className="missing-row">
+                      <dt>
+                        {funded ? "Sponsor contribution" : "You’re missing"}
+                      </dt>
+                      <dd>
+                        {shortfall} <span>ETH</span>
+                      </dd>
+                    </div>
+                  </dl>
+                  {mode === "simulation" && !simBusy && simStage === 0 && (
+                    <div className="range-field">
+                      <label htmlFor="contribution">
+                        Try a different contribution
+                      </label>
+                      <input
+                        id="contribution"
+                        type="range"
+                        min="0"
+                        max="95"
+                        step="5"
+                        value={contribution}
+                        onChange={(e) =>
+                          setContribution(Number(e.target.value))
+                        }
+                      />
+                    </div>
+                  )}
+                  <div className="scenario-picker">
+                    <label htmlFor="scenario">Demo outcome</label>
+                    <select
+                      id="scenario"
+                      value={currentKind}
+                      disabled={simBusy || liveBusy}
+                      onChange={(e) => {
+                        setKind(e.target.value as "complete" | "refund");
+                        setSimStage(0);
+                        if (mode === "live") {
+                          setRun(null);
+                          sessionStorage.removeItem("lastwei-run");
+                        }
+                      }}
+                    >
+                      <option value="complete">Complete the payment</option>
+                      <option value="refund">
+                        Expire and refund the sponsor
+                      </option>
+                    </select>
+                  </div>
+                  <button
+                    type="button"
+                    className="primary wide"
+                    disabled={
+                      mode === "simulation"
+                        ? simBusy
+                        : busy ||
+                          liveBusy ||
+                          !config?.ready ||
+                          config.remaining === 0
+                    }
+                    onClick={
+                      mode === "simulation"
+                        ? () => {
+                            setSimStage(0);
+                            setSimBusy(true);
+                          }
+                        : startLive
+                    }
+                  >
+                    {mode === "simulation"
+                      ? simBusy
+                        ? "Walking through the intent…"
+                        : simStage === 3
+                          ? "Run again"
+                          : "Run simulation"
+                      : busy
+                        ? "Preparing…"
+                        : liveBusy
+                          ? "Transaction in progress…"
+                          : config?.ready
+                            ? "Run Sepolia demo"
+                            : "Sepolia demo preparing"}
+                    <ArrowRight size={18} />
+                  </button>
+                  <div className="button-note">
+                    <ShieldCheck size={15} />
+                    {mode === "live"
+                      ? "The demo sponsor pays execution gas."
+                      : "Sponsor funding cannot be withdrawn as a wallet top-up."}
+                  </div>
+                  {mode === "live" && config && (
+                    <p className="budget">
+                      {config.remaining} public demo runs remaining · globally
+                      capped testnet budget
+                    </p>
+                  )}
+                  {error && (
+                    <div className="error" role="alert">
+                      {error}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (run) {
+                            api<DemoRun>(`/demo/${run.id}/advance`, {})
+                              .then(setRun)
+                              .catch((e) => setError(e.message));
+                          } else startLive();
+                        }}
+                      >
+                        Retry
+                      </button>
+                    </div>
+                  )}
+                  {configError && mode === "live" && (
+                    <p className="error" role="alert">
+                      {configError}
+                    </p>
+                  )}
+                </section>
+                <section
+                  className="settlement-panel"
+                  aria-labelledby="settlement-title"
+                >
+                  <div className="panel-top">
+                    <span className="eyebrow">02 / SETTLEMENT</span>
+                    <span className={`tag ${settled ? "success" : ""}`}>
+                      {settled ? "Settled" : funded ? "In progress" : "Ready"}
+                    </span>
+                  </div>
+                  <div className="settlement-visual">
+                    <div className={`orbit ${settled ? "complete" : ""}`}>
+                      <div className="orbit-core">
+                        {settled ? (
+                          currentKind === "refund" ? (
+                            <ArrowCounterClockwise size={36} />
+                          ) : (
+                            <Check size={40} />
+                          )
+                        ) : (
+                          <Lightning size={36} />
+                        )}
+                      </div>
+                      <span className="orbit-node node-a" />
+                      <span className="orbit-node node-b" />
+                      <span className="orbit-node node-c" />
+                    </div>
+                  </div>
+                  <h2 id="settlement-title">{progressTitle}</h2>
+                  <p className="settlement-description">
+                    {settled
+                      ? currentKind === "refund"
+                        ? "The owner contribution is available again. The sponsor’s shortfall is returned."
+                        : "The checkout received the full payment. The intended beneficiary gets the receipt."
+                      : "Your signature binds the destination, payment, calldata, nonce, and deadline."}
+                  </p>
+                  <ol className="steps">
+                    {[
+                      [
+                        "Authorize the exact action",
+                        "EIP-712 signature · account + chain bound",
+                      ],
+                      [
+                        "Lock the missing value",
+                        `${shortfall} ETH · dedicated sponsor escrow`,
+                      ],
+                      [
+                        currentKind === "refund"
+                          ? "Expire and return funds"
+                          : "Execute the authorized payment",
+                        currentKind === "refund"
+                          ? "Permissionless reclaim · sponsor-only withdrawal"
+                          : "Atomic call · relayer pays gas",
+                      ],
+                    ].map(([label, desc], i) => (
+                      <li
+                        key={label}
+                        className={
+                          stage > i
+                            ? "done"
+                            : stage === i && (simBusy || liveBusy)
+                              ? "active"
+                              : ""
+                        }
+                      >
+                        <span className="step-number">
+                          {stage > i ? (
+                            <Check size={14} />
+                          ) : (
+                            String(i + 1).padStart(2, "0")
+                          )}
+                        </span>
+                        <div>
+                          <strong>{label}</strong>
+                          <span>{desc}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                  <div
+                    className="execution-status"
+                    role="status"
+                    aria-live="polite"
+                  >
+                    <span className="status-dot" />
+                    {mode === "simulation"
+                      ? simStage === 3
+                        ? `Simulation ${currentKind === "refund" ? "refunded" : "completed"}`
+                        : simBusy
+                          ? "Simulating contract lifecycle"
+                          : "Waiting for your action"
+                      : run
+                        ? (statusLabels[run.status] ?? run.status) +
+                          (waiting ? ` · ${waiting}s` : "")
+                        : "Ready to run on Sepolia"}
+                  </div>
+                  {mode === "live" && run && (
+                    <div className="receipt-links">
+                      {[
+                        ["Funding", run.fund_tx],
+                        ["Execution", run.execute_tx],
+                        ["Reclaim", run.reclaim_tx],
+                        ["Refund", run.refund_tx],
+                      ]
+                        .filter(([, hash]) => hash)
+                        .map(([name, hash]) => (
+                          <a
+                            key={name}
+                            href={`https://sepolia.basescan.org/tx/${hash}`}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            {name} receipt <ArrowUpRight size={14} />
+                          </a>
+                        ))}
+                      {run.intent_id && (
+                        <button
+                          type="button"
+                          className="text-button"
+                          onClick={() => {
+                            navigator.clipboard
+                              .writeText(run.intent_id!)
+                              .then(() => setCopied(true))
+                              .catch(() =>
+                                setError(
+                                  "Clipboard unavailable. Intent ID is in the receipt.",
+                                ),
+                              );
+                          }}
+                        >
+                          <Copy size={14} />
+                          {copied ? "Copied" : "Copy intent ID"}
+                        </button>
+                      )}
+                      {run.error && <p className="error">{run.error}</p>}
+                    </div>
+                  )}
+                </section>
+              </div>
+              <section className="assurance">
+                <div>
+                  <ShieldCheck size={21} />
+                  <strong>Intent-locked</strong>
+                  <span>Exact target, calldata, and value</span>
+                </div>
+                <div>
+                  <Clock size={21} />
+                  <strong>Refundable</strong>
+                  <span>Expired funds return to the sponsor</span>
+                </div>
+                <div>
+                  <Receipt size={21} />
+                  <strong>Verifiable</strong>
+                  <span>Every live action leaves a receipt</span>
+                </div>
+              </section>
+              <div className="next-step">
+                <div>
+                  <span className="eyebrow">FROM DEMO TO YOUR WALLET</span>
+                  <p>Your own account. Your signature. Your sponsor.</p>
+                </div>
+                <a href="#wallet">
+                  Use your wallet <ArrowUpRight size={17} />
+                </a>
+              </div>
+            </>
+          )}
+          <footer>
+            <span>LastWei · Open-source testnet prototype</span>
+            <div>
+              <a
+                href={`${repo}/blob/main/docs/SECURITY.md`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Security & limitations
+              </a>
+              <a
+                href="https://colosseum.com/arena/projects/lastwei"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Colosseum <ArrowUpRight size={12} />
+              </a>
+            </div>
+          </footer>
+        </main>
+      </div>
+    </div>
+  );
 }
-function Protocol({config}:{config:NetworkConfig|null}){return <><div className="eyebrow">THE PROTOCOL</div><h1>Money for the action.</h1><p className="intro">A small, composable primitive for sponsoring payment value.</p><div className="protocol-content"><section><h2>Three balances. One enforceable promise.</h2><p>The account separates available owner ETH, the full locked payment, and sponsor refund credits. Funding reserves the owner’s contribution and accepts exactly the missing value.</p><div className="protocol-equation"><span>Owner contribution<strong>0.0007 ETH</strong></span><b>+</b><span>Sponsor shortfall<strong>0.0003 ETH</strong></span><b>=</b><span>Authorized action<strong>0.0010 ETH</strong></span></div><p>Any relayer can call execute. Only the signed target and calldata receive the payment. If the target reverts, the transaction rolls back and the funds remain locked. After expiry, anyone can release the escrow; only the sponsor can withdraw its refund.</p></section><section><h2>What makes LastWei useful?</h2><p>A gas paymaster covers execution fees. LastWei covers the missing native-token value of a specific action. A relayer still pays gas separately. This MVP is a dedicated intent account; existing EOA funds are not automatically available inside it.</p><p>Initial use case: a developer workshop checkout where a community sponsor helps a nearly funded user complete a purchase. The business hypothesis is a merchant-funded onboarding SDK, measured by completed actions rather than wallet top-ups.</p></section><section><h2>Inspect the evidence</h2><div className="evidence-links"><a href={repo} target="_blank" rel="noreferrer"><Code size={20}/>Public repository <ArrowUpRight size={16}/></a><a href={`${repo}/blob/main/tests/contracts.test.mjs`} target="_blank" rel="noreferrer"><ShieldCheck size={20}/>Adversarial contract tests <ArrowUpRight size={16}/></a>{config?.factory&&<a href={`${config.explorer}/address/${config.factory}`} target="_blank" rel="noreferrer"><LinkSimple size={20}/>Sepolia factory <ArrowUpRight size={16}/></a>}{config?.checkout&&<a href={`${config.explorer}/address/${config.checkout}`} target="_blank" rel="noreferrer"><Receipt size={20}/>Demo checkout contract <ArrowUpRight size={16}/></a>}</div></section><section className="limitations"><h2>Prototype boundaries</h2><p>Base Sepolia only. EOA signatures only. No fiat, token swapping, bridging, mainnet support, ERC-4337 bundler, or audited security claim. The demo receipt is non-transferable and has no monetary value. A malicious destination can misuse value sent to it; a sponsor must review what it is funding. The public demo relayer permits only the fixed sample checkout.</p></section></div></>;}
+function Protocol({ config }: { config: NetworkConfig | null }) {
+  return (
+    <>
+      <div className="eyebrow">THE PROTOCOL</div>
+      <h1>Money for the action.</h1>
+      <p className="intro">
+        A small, composable primitive for sponsoring payment value.
+      </p>
+      <div className="protocol-content">
+        <section>
+          <h2>Three balances. One enforceable promise.</h2>
+          <p>
+            The account separates available owner ETH, the full locked payment,
+            and sponsor refund credits. Funding reserves the owner’s
+            contribution and accepts exactly the missing value.
+          </p>
+          <div className="protocol-equation">
+            <span>
+              Owner contribution<strong>0.0007 ETH</strong>
+            </span>
+            <b>+</b>
+            <span>
+              Sponsor shortfall<strong>0.0003 ETH</strong>
+            </span>
+            <b>=</b>
+            <span>
+              Authorized action<strong>0.0010 ETH</strong>
+            </span>
+          </div>
+          <p>
+            Any relayer can call execute. Only the signed target and calldata
+            receive the payment. If the target reverts, the transaction rolls
+            back and the funds remain locked. After expiry, anyone can release
+            the escrow; only the sponsor can withdraw its refund.
+          </p>
+        </section>
+        <section>
+          <h2>What makes LastWei useful?</h2>
+          <p>
+            A gas paymaster covers execution fees. LastWei covers the missing
+            native-token value of a specific action. A relayer still pays gas
+            separately. This MVP is a dedicated intent account; existing EOA
+            funds are not automatically available inside it.
+          </p>
+          <p>
+            Initial use case: a developer workshop checkout where a community
+            sponsor helps a nearly funded user complete a purchase. The business
+            hypothesis is a merchant-funded onboarding SDK, measured by
+            completed actions rather than wallet top-ups.
+          </p>
+        </section>
+        <section>
+          <h2>Inspect the evidence</h2>
+          <div className="evidence-links">
+            <a href={repo} target="_blank" rel="noreferrer">
+              <Code size={20} />
+              Public repository <ArrowUpRight size={16} />
+            </a>
+            <a
+              href={`${repo}/blob/main/tests/contracts.test.mjs`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <ShieldCheck size={20} />
+              Adversarial contract tests <ArrowUpRight size={16} />
+            </a>
+            {config?.factory && (
+              <a
+                href={`${config.explorer}/address/${config.factory}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <LinkSimple size={20} />
+                Sepolia factory <ArrowUpRight size={16} />
+              </a>
+            )}
+            {config?.checkout && (
+              <a
+                href={`${config.explorer}/address/${config.checkout}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Receipt size={20} />
+                Demo checkout contract <ArrowUpRight size={16} />
+              </a>
+            )}
+          </div>
+        </section>
+        <section className="limitations">
+          <h2>Prototype boundaries</h2>
+          <p>
+            Base Sepolia only. EOA signatures only. No fiat, token swapping,
+            bridging, mainnet support, ERC-4337 bundler, or audited security
+            claim. The demo receipt is non-transferable and has no monetary
+            value. A malicious destination can misuse value sent to it; a
+            sponsor must review what it is funding. The public demo relayer
+            permits only the fixed sample checkout.
+          </p>
+        </section>
+      </div>
+    </>
+  );
+}
