@@ -39,3 +39,29 @@ We built one checkout action that can be tested for exact funding and recoverabi
 Success criterion for a pilot: improved completed-action rate at a bounded subsidy
 cost, with clear sponsor controls and no increase in fund loss. Token issuance is
 unnecessary for the current hypothesis.
+
+## Implemented review fixes
+
+The interface review identified several concrete problems and repaired them:
+
+- The owner's reserved/spent contribution was described as available. It now reads
+  "Owner contribution" and the percentage reads "from owner".
+- Simulation could display the same settlement badge as a real transaction. Its
+  terminal badge now explicitly reads "Simulated".
+- The sponsor review hid key payment semantics. It now shows the total value,
+  owner contribution, exact sponsor value, destination, account, beneficiary and
+  a dated expiry, with explorer links for the addresses.
+- Released escrow was called refunded before withdrawal. The wallet now calls it
+  "Escrow released"; sponsor-only withdrawal remains a separate operation.
+- Sponsors could attempt an owner-only cancellation. The UI now disables that
+  action for the sponsor.
+- The skip link changed the wallet route instead of focusing content. It now
+  preserves the route and focuses the main region. Small state animations honor
+  reduced-motion preferences.
+- Budget exhaustion could leave judges without evidence. Verified deployment and
+  recorded live receipts are accessible even when a demo cannot start.
+
+These changes passed the 27 contract/relay tests and six browser tests, including
+actual two-wallet local-EVM checkout, desktop/mobile accessibility, route/focus,
+reduced motion and external-relayer settlement reconciliation. This validation
+does not establish production security or customer demand.

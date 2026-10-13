@@ -129,6 +129,11 @@ expiry, rejecting refund recipients and reentrancy. Relay policy tests cover
 origins, fixed request shapes, private-field redaction and bounded request bodies.
 The public chain has successful completion and expiry/refund receipts.
 
+The current suite contains 27 contract/relay tests and six browser tests. Sponsor
+review, explicit simulation status, recovery permissions, keyboard routing and
+reduced-motion behavior were repaired following the product review; see
+[implemented review fixes](docs/PRODUCT.md#implemented-review-fixes).
+
 The test-only Ganache dependency has upstream bundled-package advisories and uses
 a JS fallback under Node 24. It is never included in the frontend or Worker bundle.
 The prototype has not received an independent security audit.
