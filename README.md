@@ -140,4 +140,10 @@ The test-only Ganache dependency has upstream bundled-package advisories and use
 a JS fallback under Node 24. It is never included in the frontend or Worker bundle.
 The prototype has not received an independent security audit.
 
-MIT license. AI-assisted implementation with OpenAI Codex; human founder Ajnas N B.
+Ajnas N B is the sole founder and project owner. He supplied the problem and
+project brief, directed product scope and revisions, approved Base Sepolia,
+provided deployment funding, reviewed the product and videos, and recorded the
+founder pitch. OpenAI Codex was used as an AI development tool for implementation,
+testing, deployment and video production under his direction.
+
+MIT license.

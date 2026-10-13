@@ -23,6 +23,16 @@ destination were repaired after the critic review. Original founder speech was
 preserved, including full words at both pause edits. No synthetic founder voice
 was used. Music attribution is included in both published descriptions.
 
-The Colosseum project is prepared with both links. Its final agreement requires
-the founder's confirmation before pressing Submit project; this file does not
-claim that final submission has occurred.
+Colosseum accepted project 17889 after the founder explicitly authorized accepting
+the Hackathon Rules and submitting. The official submission page shows
+"Submitted", October 13, 2026 at 12:28 AM PDT, and "Your project is entered for
+judging." Both published video links are saved in the submission.
+
+- Project: https://colosseum.com/arena/projects/lastwei
+- Submission receipt: https://colosseum.com/arena/projects/17889/submission
+
+The founder credit in the original submission answer led with AI assistance.
+That answer is locked after submission. The permitted judging notes were updated
+to lead with Ajnas N B as sole founder and project owner, describe his problem
+brief, product direction, revisions, chain choice, funding, review and founder
+pitch, and identify Codex as an AI development tool used under his direction.
