@@ -28,13 +28,14 @@ export function compile() {
       },
     },
   };
+  const allSources={...sources};
   const output = JSON.parse(
     solc.compile(JSON.stringify(input), {
       import: (file) => {
         try {
-          return {
-            contents: fs.readFileSync(path.join("node_modules", file), "utf8"),
-          };
+          const contents=fs.readFileSync(path.join("node_modules", file), "utf8");
+          allSources[file]={content:contents};
+          return {contents};
         } catch {
           return { error: `Import missing: ${file}` };
         }
@@ -44,6 +45,8 @@ export function compile() {
   const errors = (output.errors ?? []).filter((e) => e.severity === "error");
   if (errors.length)
     throw new Error(errors.map((e) => e.formattedMessage).join("\n"));
+  fs.mkdirSync('artifacts',{recursive:true});
+  fs.writeFileSync('artifacts/standard-input.json',JSON.stringify({...input,sources:allSources},null,2));
   return Object.fromEntries(
     Object.values(output.contracts).flatMap((group) =>
       Object.entries(group)
@@ -78,10 +81,6 @@ if (process.argv[1]?.endsWith("compile.mjs")) {
         ([n, c]) => `export const ${n}Abi = ${JSON.stringify(c.abi)} as const;`,
       )
       .join("\n"),
-  );
-  fs.writeFileSync(
-    "artifacts/standard-input.json",
-    JSON.stringify({ compiler: solc.version() }, null, 2),
   );
   console.log(
     `Compiled ${Object.keys(contracts).length} contracts with ${solc.version()}`,

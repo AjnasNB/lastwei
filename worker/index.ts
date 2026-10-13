@@ -5,6 +5,7 @@ import {
   encodeFunctionData,
   keccak256,
   parseEther,
+  parseAbiItem,
   type Hex,
   type Address,
   type TransactionReceipt,
@@ -39,7 +40,6 @@ type Run = {
   pending_raw: Hex | null;
   error: string | null;
 };
-const terminal = ["executed", "refunded", "failed"];
 const allowedMirror =
   "https://wonderful-meadow-00299ce00.4.azurestaticapps.net";
 function response(data: unknown, status = 200, origin?: string | null) {
@@ -236,6 +236,57 @@ async function advance(env: Env, id: string): Promise<Run | null> {
           });
       }
     } else if (lock.status === "awaiting_expiry" && lock.intent_id) {
+      const escrow = await client.readContract({
+        address: account,
+        abi: LastWeiAccountAbi,
+        functionName: "sponsorships",
+        args: [lock.intent_id],
+      });
+      if (escrow[6] === 2) {
+        const funding = await client.getTransactionReceipt({
+          hash: lock.fund_tx!,
+        });
+        const logs = await client.getLogs({
+          address: account,
+          event: parseAbiItem(
+            "event Executed(bytes32 indexed intentId, address indexed executor, bytes32 resultHash)",
+          ),
+          args: { intentId: lock.intent_id },
+          fromBlock: funding.blockNumber,
+        });
+        await patch(env, id, {
+          status: "executed",
+          execute_tx: logs[0]?.transactionHash ?? null,
+          error: null,
+          pending_raw: null,
+        });
+        return runRow(env, id);
+      }
+      if (escrow[6] === 3 || escrow[6] === 4) {
+        const credit = await client.readContract({
+          address: account,
+          abi: LastWeiAccountAbi,
+          functionName: "refunds",
+          args: [wallet.account.address],
+        });
+        if (credit > 0n)
+          await submit(
+            "refund_pending",
+            "refund_tx",
+            encodeFunctionData({
+              abi: LastWeiAccountAbi,
+              functionName: "withdrawRefund",
+              args: [wallet.account.address],
+            }),
+          );
+        else
+          await patch(env, id, {
+            status: "refunded",
+            error: null,
+            pending_raw: null,
+          });
+        return runRow(env, id);
+      }
       const b = await client.getBlock();
       if (b.timestamp >= BigInt(lock.deadline ?? 0))
         await submit(

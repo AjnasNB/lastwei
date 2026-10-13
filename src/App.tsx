@@ -137,7 +137,14 @@ export function App() {
     }
   }
   const liveBusy = !!run && !terminalStates.includes(run.status);
-  const currentKind = mode === "live" && run ? run.kind : kind;
+  const currentKind =
+    mode === "live" && run
+      ? run.status === "executed"
+        ? "complete"
+        : run.status === "refunded"
+          ? "refund"
+          : run.kind
+      : kind;
   const pct = mode === "live" ? 70 : contribution;
   const shortfall = (((100 - pct) / 100) * 0.001).toFixed(5);
   const funded =
