@@ -1,0 +1,419 @@
+{
+  "title": "product",
+  "ok": true,
+  "info": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "duration": 102.667
+  },
+  "phone": {
+    "ok": true,
+    "aspect": "16:9",
+    "phone_width_pt": 390,
+    "scale": 0.2031,
+    "min_pt": 5,
+    "min_px": 25,
+    "lang": "en",
+    "reading": {
+      "cps": 17,
+      "wps": 3,
+      "lead_s": 0.3,
+      "min_s": 1
+    },
+    "checked": {
+      "size": true,
+      "zones": true,
+      "reading": true
+    },
+    "flash_exempt": 0,
+    "texts": 81,
+    "smallest": {
+      "text": "LastWei / payment value sponsorship",
+      "px": 36,
+      "pt": 7.3,
+      "t": 0
+    },
+    "smallest_texts": [
+      {
+        "text": "LastWei / payment value sponsorship",
+        "px": 36,
+        "pt": 7.3,
+        "t": 0,
+        "caption": false
+      },
+      {
+        "text": "ETH",
+        "px": 36,
+        "pt": 7.3,
+        "t": 3.73,
+        "caption": false
+      },
+      {
+        "text": "Base Sepolia / test ETH",
+        "px": 36,
+        "pt": 7.3,
+        "t": 16,
+        "caption": false
+      },
+      {
+        "text": "The completed run / actual signed constr",
+        "px": 36,
+        "pt": 7.3,
+        "t": 29.23,
+        "caption": false
+      },
+      {
+        "text": "Recorded Base Sepolia result",
+        "px": 36,
+        "pt": 7.3,
+        "t": 36,
+        "caption": false
+      },
+      {
+        "text": "Base Sepolia / chain 84532",
+        "px": 36,
+        "pt": 7.3,
+        "t": 46,
+        "caption": false
+      },
+      {
+        "text": "Fund",
+        "px": 36,
+        "pt": 7.3,
+        "t": 46,
+        "caption": false
+      },
+      {
+        "text": "0x78476f0f355288b45f734bae5490c9b1568026",
+        "px": 36,
+        "pt": 7.3,
+        "t": 46,
+        "caption": false
+      }
+    ],
+    "items": []
+  },
+  "determinism": {
+    "times": [
+      15.4,
+      41.06666666666667,
+      66.73333333333333,
+      92.4
+    ],
+    "unstable": [],
+    "diffs": [
+      {
+        "t": 66.73333333333333,
+        "same": true,
+        "maxDelta": 0,
+        "changedPct": 0,
+        "solid": 0
+      },
+      {
+        "t": 92.4,
+        "same": true,
+        "maxDelta": 0,
+        "changedPct": 0,
+        "solid": 0
+      },
+      {
+        "t": 41.06666666666667,
+        "same": true,
+        "maxDelta": 0,
+        "changedPct": 0,
+        "solid": 0
+      },
+      {
+        "t": 15.4,
+        "same": true,
+        "maxDelta": 0,
+        "changedPct": 0,
+        "solid": 0
+      }
+    ]
+  },
+  "fonts": {
+    "declared": [
+      "Geist",
+      "Geist Mono"
+    ],
+    "used": {}
+  },
+  "findings": [
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"LastWei / payment value sponsorship\" is within 5% of the frame edge at 0:05.70",
+      "t": 5.7,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"One tiny gap.\" is within 5% of the frame edge at 0:05.70",
+      "t": 5.7,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"0.0003\" is within 5% of the frame edge at 0:05.70",
+      "t": 5.7,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"ETH missing.\" is within 5% of the frame edge at 0:05.70",
+      "t": 5.7,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Owner contribution\" is within 5% of the frame edge at 0:05.70",
+      "t": 5.7,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Only the exact shortfall.\" is within 5% of the frame edge at 0:05.70",
+      "t": 5.7,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"One checkout. Exact shortfall.\" is within 5% of the frame edge at 0:17.10",
+      "t": 17.1,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Base Sepolia / test ETH\" is within 5% of the frame edge at 0:17.10",
+      "t": 17.1,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Actual product UI. No wallet required f…\" is within 5% of the frame edge at 0:17.10",
+      "t": 17.1,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"The signed checkout completes.\" is within 5% of the frame edge at 0:39.90",
+      "t": 39.9,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Recorded Base Sepolia result\" is within 5% of the frame edge at 0:39.90",
+      "t": 39.9,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Full checkout value\" is within 5% of the frame edge at 0:39.90",
+      "t": 39.9,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"0.001 ETH\" is within 5% of the frame edge at 0:39.90",
+      "t": 39.9,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Relayer pays execution gas.\" is within 5% of the frame edge at 0:39.90",
+      "t": 39.9,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"The published beneficiary receives a no…\" is within 5% of the frame edge at 0:39.90",
+      "t": 39.9,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"The proof is public.\" is within 5% of the frame edge at 0:51.33",
+      "t": 51.333333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Base Sepolia / chain 84532\" is within 5% of the frame edge at 0:51.33",
+      "t": 51.333333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Funding and execution receipts\" is within 5% of the frame edge at 0:51.33",
+      "t": 51.333333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Fund\" is within 5% of the frame edge at 0:51.33",
+      "t": 51.333333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Execute\" is within 5% of the frame edge at 0:51.33",
+      "t": 51.333333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Separate expiry / refund run / mechanis…\" is within 5% of the frame edge at 1:02.73",
+      "t": 62.733333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"The deadline changes the outcome.\" is within 5% of the frame edge at 1:02.73",
+      "t": 62.733333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Execution is no longer allowed.\" is within 5% of the frame edge at 1:02.73",
+      "t": 62.733333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Your account. Your signed request.\" is within 5% of the frame edge at 1:14.13",
+      "t": 74.133333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Wallet flow / test ETH\" is within 5% of the frame edge at 1:14.13",
+      "t": 74.133333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"This review uses the genuine completed …\" is within 5% of the frame edge at 1:14.13",
+      "t": 74.133333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Inspect before funding.\" is within 5% of the frame edge at 1:25.53",
+      "t": 85.533333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"0.0003 ETH\" is within 5% of the frame edge at 1:25.53",
+      "t": 85.533333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Exact value + separate gas\" is within 5% of the frame edge at 1:25.53",
+      "t": 85.533333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Open source. Source verified.\" is within 5% of the frame edge at 1:36.93",
+      "t": 96.933333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Base Sepolia prototype\" is within 5% of the frame edge at 1:36.93",
+      "t": 96.933333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Source matching establishes reproducibi…\" is within 5% of the frame edge at 1:36.93",
+      "t": 96.933333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"LastWei\" is within 5% of the frame edge at 1:42.63",
+      "t": 102.633333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Finish the action\" is within 5% of the frame edge at 1:42.63",
+      "t": 102.633333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"you already chose.\" is within 5% of the frame edge at 1:42.63",
+      "t": 102.633333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Try the testnet prototype.\" is within 5% of the frame edge at 1:42.63",
+      "t": 102.633333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"lastwei.ajnasnb.workers.dev\" is within 5% of the frame edge at 1:42.63",
+      "t": 102.633333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"github.com/AjnasNB/lastwei\" is within 5% of the frame edge at 1:42.63",
+      "t": 102.633333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Base Sepolia / unaudited / test ETH only\" is within 5% of the frame edge at 1:42.63",
+      "t": 102.633333,
+      "source": "canvas"
+    }
+  ],
+  "note": "The shared palette and music family intentionally follow the LastWei brand. Global history comparisons are omitted from this project-local export."
+}

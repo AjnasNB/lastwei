@@ -1,0 +1,18 @@
+{
+  "chainId": 84532,
+  "account": "0x2ad9e730c902d30ef267dbceefce859752445193",
+  "target": "0x0407348FF5372e0A49e92CF364d408A01ee49027",
+  "valueETH": "0.001",
+  "contributionETH": "0.0007",
+  "shortfallETH": "0.0003",
+  "function": "purchase(address beneficiary)",
+  "beneficiary": "0x3328Bf7790D1035A5d5B36E58c6cd3a20B3836f9",
+  "dataHash": "0x8d1f72cce3371ffd23ae529695d7cf1797d5296cdb38fc061c7a34b8c647c465",
+  "nonce": "277921402055512697045550223521318555419",
+  "deadline": "1791865966",
+  "intentId": "0x6d63fb2fb6e9da5a3a7f094ba10f9b801cb79fdd664d129fb57254ce6225b927",
+  "receiptHashes": {
+    "funding": "0x78476f0f355288b45f734bae5490c9b15680265183768f9f9ac5dcb5b0f3d610",
+    "execution": "0x43961b25026edbba7b9632b032fa467f5036e9f1fa44933c2070e142935a5f1f"
+  }
+}

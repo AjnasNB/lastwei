@@ -1,0 +1,8 @@
+{
+  "title": "LastWei — Finish one signed action",
+  "width": 1920, "height": 1080, "fps": 30, "duration": 102.667,
+  "background": "#f3f5f2", "poster": 0, "score": false, "loudness": -16,
+  "audio": "audio/mix.json",
+  "render": {"crf": 16, "x264_preset": "veryfast", "format": "jpeg"},
+  "chapters": [[0,"The exact shortfall"],[16,"Live checkout"],[29.041667,"Signed constraints"],[45.753709,"Public receipts"],[53.904584,"Expiry"],[62.913709,"Recorded refund"],[73.705126,"Wallet review"],[89.779834,"Evidence and scope"]]
+}

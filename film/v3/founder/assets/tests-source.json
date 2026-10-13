@@ -1,0 +1,107 @@
+{
+  "source": "tests/contracts.test.mjs",
+  "tests": [
+    {
+      "lines": [
+        "test(\"execution replay fails\", async () => {",
+        "  const f = await fixture();",
+        "  await fund(f);",
+        "  await write(wallets[2], f.account, \"LastWeiAccount\", \"execute\", [",
+        "    f.id,",
+        "    f.data,",
+        "  ]);",
+        "  await rejected(f, \"execute\", [f.id, f.data], wallets[2], 0n, \"NotFunded\");",
+        "});"
+      ],
+      "startLine": 307,
+      "name": "execution replay fails"
+    },
+    {
+      "lines": [
+        "test(\"reentrant target is blocked and legitimate outer action succeeds\", async () => {",
+        "  const f = await fixture({ targetName: \"ReentrantTarget\" });",
+        "  f.data = encodeFunctionData({",
+        "    abi: contracts.ReentrantTarget.abi,",
+        "    functionName: \"attack\",",
+        "  });",
+        "  f.intent.dataHash = keccak256(f.data);",
+        "  f.signature = await wallets[0].signTypedData(f.typed);",
+        "  f.id = hashTypedData(f.typed);",
+        "  await write(wallets[0], f.target, \"ReentrantTarget\", \"arm\", [",
+        "    f.account,",
+        "    f.id,",
+        "  ]);",
+        "  await fund(f);",
+        "  await write(wallets[2], f.account, \"LastWeiAccount\", \"execute\", [",
+        "    f.id,",
+        "    f.data,",
+        "  ]);",
+        "  assert.equal(",
+        "    await client.readContract({",
+        "      address: f.target,",
+        "      abi: contracts.ReentrantTarget.abi,",
+        "      functionName: \"blocked\",",
+        "    }),",
+        "    true,",
+        "  );",
+        "  await invariant(f);",
+        "});"
+      ],
+      "startLine": 478,
+      "name": "reentrant target is blocked and legitimate outer action succeeds"
+    },
+    {
+      "lines": [
+        "test(\"a mined failing target call retains funds and the funded status\", async () => {",
+        "  const f = await fixture({ targetName: \"RevertingTarget\" });",
+        "  await fund(f);",
+        "  const hash = await wallets[2].writeContract({",
+        "    address: f.account,",
+        "    abi: contracts.LastWeiAccount.abi,",
+        "    functionName: \"execute\",",
+        "    args: [f.id, f.data],",
+        "    gas: 500_000n,",
+        "  });",
+        "  assert.equal(",
+        "    (await client.waitForTransactionReceipt({ hash })).status,",
+        "    \"reverted\",",
+        "  );",
+        "  assert.equal((await read(f.account, \"sponsorships\", [f.id]))[6], 1);",
+        "  await invariant(f);",
+        "});"
+      ],
+      "startLine": 334,
+      "name": "a mined failing target call retains funds and the funded status"
+    },
+    {
+      "lines": [
+        "test(\"refund cannot be stolen or withdrawn twice\", async () => {",
+        "  const f = await fixture();",
+        "  await fund(f);",
+        "  await write(wallets[0], f.account, \"LastWeiAccount\", \"cancel\", [f.id]);",
+        "  await rejected(",
+        "    f,",
+        "    \"withdrawRefund\",",
+        "    [wallets[2].account.address],",
+        "    wallets[2],",
+        "    0n,",
+        "    \"InvalidIntent\",",
+        "  );",
+        "  await write(wallets[1], f.account, \"LastWeiAccount\", \"withdrawRefund\", [",
+        "    wallets[1].account.address,",
+        "  ]);",
+        "  await rejected(",
+        "    f,",
+        "    \"withdrawRefund\",",
+        "    [wallets[1].account.address],",
+        "    wallets[1],",
+        "    0n,",
+        "    \"InvalidIntent\",",
+        "  );",
+        "});"
+      ],
+      "startLine": 374,
+      "name": "refund cannot be stolen or withdrawn twice"
+    }
+  ]
+}

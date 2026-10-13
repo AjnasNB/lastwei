@@ -1,0 +1,66 @@
+{
+  "title": "LastWei — Founder pitch",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "duration": 110.966667,
+  "background": "#f3f5f2",
+  "score": false,
+  "poster": 0,
+  "audio": "audio/mix.json",
+  "render": {
+    "crf": 16,
+    "x264_preset": "veryfast"
+  },
+  "chapters": [
+    [
+      0,
+      "Founder"
+    ],
+    [
+      4.4,
+      "Shortfall"
+    ],
+    [
+      19.533333,
+      "Detour"
+    ],
+    [
+      31.903333,
+      "Exact sponsor value"
+    ],
+    [
+      39.543333000000004,
+      "Signed constraints"
+    ],
+    [
+      45.199999999999996,
+      "Escrow"
+    ],
+    [
+      54.22,
+      "Recovery"
+    ],
+    [
+      63.83,
+      "Base Sepolia proof"
+    ],
+    [
+      74.86,
+      "Tests"
+    ],
+    [
+      81.26,
+      "Next pilot"
+    ],
+    [
+      92.46,
+      "Scope"
+    ],
+    [
+      102.22,
+      "Close"
+    ]
+  ],
+  "loudness": "-16"
+}

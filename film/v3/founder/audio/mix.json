@@ -1,0 +1,51 @@
+{
+  "duration": 110.966667,
+  "tracks": [
+    {
+      "id": "voice",
+      "kind": "voice",
+      "file": "media/founder-fullwords.mp4",
+      "gain_db": 0
+    },
+    {
+      "id": "bed",
+      "kind": "music",
+      "catalog": "ofdn-pure",
+      "fit": true,
+      "gain_db": -9,
+      "fade_in": 0.8,
+      "fade_out": 1.2,
+      "duck": {
+        "under": "voice",
+        "depth_db": 12,
+        "carve": 0.4
+      }
+    },
+    {
+      "kind": "sfx",
+      "synth": {
+        "type": "tick",
+        "intensity": 0.35,
+        "seed": 5
+      },
+      "at": 31.903333,
+      "gain_db": -8,
+      "texture": true
+    },
+    {
+      "kind": "sfx",
+      "synth": {
+        "type": "tick",
+        "intensity": 0.35,
+        "seed": 6
+      },
+      "at": 60.73,
+      "gain_db": -8,
+      "texture": true
+    }
+  ],
+  "master": {
+    "lufs": -16,
+    "true_peak": -1.5
+  }
+}

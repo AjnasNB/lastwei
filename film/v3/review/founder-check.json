@@ -1,0 +1,297 @@
+{
+  "title": "founder",
+  "ok": true,
+  "info": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "duration": 110.966667
+  },
+  "phone": {
+    "ok": true,
+    "aspect": "16:9",
+    "phone_width_pt": 390,
+    "scale": 0.2031,
+    "min_pt": 5,
+    "min_px": 25,
+    "lang": "en",
+    "reading": {
+      "cps": 17,
+      "wps": 3,
+      "lead_s": 0.3,
+      "min_s": 1
+    },
+    "checked": {
+      "size": true,
+      "zones": true,
+      "reading": true
+    },
+    "flash_exempt": 0,
+    "texts": 75,
+    "smallest": {
+      "text": "After expiry: reclaim",
+      "px": 32,
+      "pt": 6.5,
+      "t": 57.5
+    },
+    "smallest_texts": [
+      {
+        "text": "After expiry: reclaim",
+        "px": 32,
+        "pt": 6.5,
+        "t": 57.5,
+        "caption": false
+      },
+      {
+        "text": "ETH",
+        "px": 34,
+        "pt": 6.9,
+        "t": 9.23,
+        "caption": false
+      },
+      {
+        "text": "Signed payment",
+        "px": 34,
+        "pt": 6.9,
+        "t": 19.73,
+        "caption": false
+      },
+      {
+        "text": "Owner has",
+        "px": 36,
+        "pt": 7.3,
+        "t": 9.23,
+        "caption": false
+      },
+      {
+        "text": "Action needs",
+        "px": 36,
+        "pt": 7.3,
+        "t": 9.23,
+        "caption": false
+      },
+      {
+        "text": "Exact shortfall",
+        "px": 36,
+        "pt": 7.3,
+        "t": 14.23,
+        "caption": false
+      },
+      {
+        "text": "The same shortfall",
+        "px": 36,
+        "pt": 7.3,
+        "t": 19.73,
+        "caption": false
+      },
+      {
+        "text": "Sponsor exactly this gap",
+        "px": 36,
+        "pt": 7.3,
+        "t": 32,
+        "caption": false
+      }
+    ],
+    "items": []
+  },
+  "determinism": {
+    "times": [
+      16.633333333333333,
+      44.36666666666667,
+      72.1,
+      99.86666666666666
+    ],
+    "unstable": [],
+    "diffs": [
+      {
+        "t": 72.1,
+        "same": true,
+        "maxDelta": 0,
+        "changedPct": 0,
+        "solid": 0
+      },
+      {
+        "t": 99.86666666666666,
+        "same": true,
+        "maxDelta": 0,
+        "changedPct": 0,
+        "solid": 0
+      },
+      {
+        "t": 44.36666666666667,
+        "same": true,
+        "maxDelta": 0,
+        "changedPct": 0,
+        "solid": 0
+      },
+      {
+        "t": 16.633333333333333,
+        "same": true,
+        "maxDelta": 0,
+        "changedPct": 0,
+        "solid": 0
+      }
+    ]
+  },
+  "fonts": {
+    "declared": [
+      "Geist",
+      "Geist Mono"
+    ],
+    "used": {}
+  },
+  "findings": [
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"EIP-712\" is within 5% of the frame edge at 0:18.47",
+      "t": 18.466667,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"0.0003\" is within 5% of the frame edge at 0:18.47",
+      "t": 18.466667,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "small_text",
+      "message": "canvas text \"Account 0x2ad9e730...52445193\" is 22px (decor) (hard to read on phones below ~36px)",
+      "t": 30.8,
+      "source": "canvas",
+      "px": 22,
+      "text": "Account 0x2ad9e730...52…"
+    },
+    {
+      "severity": "info",
+      "code": "small_text",
+      "message": "canvas text \"Base Sepolia · 84532\" is 22px (decor) (hard to read on phones below ~36px)",
+      "t": 30.8,
+      "source": "canvas",
+      "px": 22,
+      "text": "Base Sepolia · 84532"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Inspect the actual transaction.\" is within 5% of the frame edge at 1:07.80",
+      "t": 67.8,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Sponsor-only refund\" is within 5% of the frame edge at 1:20.13",
+      "t": 80.133333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"tests/contracts.test.mjs\" is within 5% of the frame edge at 1:20.13",
+      "t": 80.133333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"const f = await fixture();\" is within 5% of the frame edge at 1:20.13",
+      "t": 80.133333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"await fund(f);\" is within 5% of the frame edge at 1:20.13",
+      "t": 80.133333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"await write(wallets[0], f.account, \"Las…\" is within 5% of the frame edge at 1:20.13",
+      "t": 80.133333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"await rejected(\" is within 5% of the frame edge at 1:20.13",
+      "t": 80.133333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"  f,\" is within 5% of the frame edge at 1:20.13",
+      "t": 80.133333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"  \"withdrawRefund\",\" is within 5% of the frame edge at 1:20.13",
+      "t": 80.133333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"  [wallets[2].account.address],\" is within 5% of the frame edge at 1:20.13",
+      "t": 80.133333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"  wallets[2],\" is within 5% of the frame edge at 1:20.13",
+      "t": 80.133333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"  0n,\" is within 5% of the frame edge at 1:20.13",
+      "t": 80.133333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"  \"InvalidIntent\",\" is within 5% of the frame edge at 1:20.13",
+      "t": 80.133333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"\"withdrawRefund\",\" is within 5% of the frame edge at 1:20.13",
+      "t": 80.133333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"\"InvalidIntent\",\" is within 5% of the frame edge at 1:20.13",
+      "t": 80.133333,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Base Sepolia\" is within 5% of the frame edge at 1:32.47",
+      "t": 92.466667,
+      "source": "canvas"
+    },
+    {
+      "severity": "info",
+      "code": "title_safe",
+      "message": "canvas text \"Test ETH · chain 84532\" is within 5% of the frame edge at 1:32.47",
+      "t": 92.466667,
+      "source": "canvas"
+    }
+  ],
+  "note": "The shared palette and music family intentionally follow the LastWei brand. Global history comparisons are omitted from this project-local export."
+}
