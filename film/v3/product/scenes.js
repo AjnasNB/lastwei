@@ -179,6 +179,7 @@
       const q=ease(prog(local,3,4));
       amount('0.0007','Owner contribution unlocked',mix(860,520,q),670,local,3,108);
       amount('0.0003','Sponsor refund credit',mix(1060,1400,q),670,local,3.1,108);
+      rise('reclaim(intentId) releases escrow',960,477,local,3,45,P.green,{align:'center'});
       if(local>5.2) {
         const q2=ease(prog(local,5.2,6.2));
         line(1180,815,1750,815,q2,P.green,5);

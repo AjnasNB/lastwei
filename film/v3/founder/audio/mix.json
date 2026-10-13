@@ -18,7 +18,10 @@
       "duck": {
         "under": "voice",
         "depth_db": 12,
-        "carve": 0.4
+        "carve": 0.4,
+        "hold": 1.2,
+        "release": 1.5,
+        "attack": 0.3
       }
     },
     {

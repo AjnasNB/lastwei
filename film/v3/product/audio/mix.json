@@ -1,1 +1,65 @@
-{"duration":102.667,"tracks":[{"id":"voice","kind":"voice","file":"audio/voice.wav","gain_db":0},{"id":"bed","kind":"music","catalog":"ofdn-pure","fit":true,"gain_db":-8,"fade_in":0.45,"fade_out":1.2,"duck":{"under":"voice","depth_db":10,"carve":0.4}},{"kind":"sfx","synth":{"type":"tick","intensity":0.2,"seed":10},"at":8.25,"gain_db":-10,"texture":true},{"kind":"sfx","synth":{"type":"tick","intensity":0.2,"seed":11},"at":56.5,"gain_db":-10,"texture":true},{"kind":"sfx","synth":{"type":"tick","intensity":0.2,"seed":12},"at":67.113709,"gain_db":-10,"texture":true}],"master":{"lufs":-16,"true_peak":-1.5}}
+{
+  "duration": 102.667,
+  "tracks": [
+    {
+      "id": "voice",
+      "kind": "voice",
+      "file": "audio/voice.wav",
+      "gain_db": 0
+    },
+    {
+      "id": "bed",
+      "kind": "music",
+      "catalog": "ofdn-pure",
+      "fit": true,
+      "gain_db": -8,
+      "fade_in": 0.45,
+      "fade_out": 1.2,
+      "duck": {
+        "under": "voice",
+        "depth_db": 10,
+        "carve": 0.4,
+        "hold": 1.2,
+        "release": 1.5,
+        "attack": 0.3
+      }
+    },
+    {
+      "kind": "sfx",
+      "synth": {
+        "type": "tick",
+        "intensity": 0.2,
+        "seed": 10
+      },
+      "at": 8.25,
+      "gain_db": -10,
+      "texture": true
+    },
+    {
+      "kind": "sfx",
+      "synth": {
+        "type": "tick",
+        "intensity": 0.2,
+        "seed": 11
+      },
+      "at": 56.5,
+      "gain_db": -10,
+      "texture": true
+    },
+    {
+      "kind": "sfx",
+      "synth": {
+        "type": "tick",
+        "intensity": 0.2,
+        "seed": 12
+      },
+      "at": 67.113709,
+      "gain_db": -10,
+      "texture": true
+    }
+  ],
+  "master": {
+    "lufs": -16,
+    "true_peak": -1.5
+  }
+}
