@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "lastwei",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-10-13",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {"directory":"./dist","binding":"ASSETS","not_found_handling":"single-page-application","run_worker_first":["/api/*"]},
+  "observability": {"enabled":true,"head_sampling_rate":1},
+  "secrets": {"required":["SPONSOR_PRIVATE_KEY","DEMO_OWNER_PRIVATE_KEY","IP_HASH_SALT"]},
+  "triggers": {"crons":["* * * * *"]},
+  "vars": {"RPC_URL":"https://base-sepolia-rpc.publicnode.com","DEMO_LIMIT":"20"},
+  "d1_databases": [{"binding":"DB","database_name":"lastwei-demo","database_id":"c593c443-61ea-414c-a9f2-507e90a542d9","migrations_dir":"migrations"}]
+}

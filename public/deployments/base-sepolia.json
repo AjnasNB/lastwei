@@ -1,0 +1,17 @@
+{
+  "chainId": 84532,
+  "rpc": "https://base-sepolia-rpc.publicnode.com",
+  "explorer": "https://sepolia.basescan.org",
+  "factory": "0xd7def713656aee75519a156ee408db77d306f257",
+  "checkout": "0x0407348ff5372e0a49e92cf364d408a01ee49027",
+  "demoAccount": "0x2Ad9e730C902D30Ef267dBcEEFcE859752445193",
+  "demoOwner": "0x3328Bf7790D1035A5d5B36E58c6cd3a20B3836f9",
+  "transactions": {
+    "factory": "0x9037749a4c2c457cd80d60fce2a2902660ec75124697a4abbfc8e0305b3fe7cd",
+    "checkout": "0x9b46f19b3565fb3a560bcabe4a04dd81a1c41bf4e7ff451b70b897559175a6e5",
+    "demoAccount": "0x663d5d5bde8cff2aa800079b02346352cfec55d2164250c034e937e2ff0db9fb",
+    "seed": "0x7aab41c299dc221b408e9301719f6d6dea73ba5a5f3fb66aba3363133b2dc0ff"
+  },
+  "deployer": "0xc1f99c08c943Af295838567D041F5f207E6AdB62",
+  "deployedAt": "2026-10-13T04:19:41.025Z"
+}
