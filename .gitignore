@@ -1,4 +1,6 @@
 node_modules/
+*.mp4
+*.webm
 dist/
 dist-azure/
 film/*.webm
@@ -7,6 +9,12 @@ film/audio/
 film/look/
 film/look-final/
 film/captures/
+film/edited/
+film/stills/
+film/look*/
+film/**/*.jpg
+film/**/*.png
+film/founder-transcript.json
 .swa/
 *.cpuprofile
 .wrangler/

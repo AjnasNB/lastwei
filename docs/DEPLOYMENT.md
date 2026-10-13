@@ -33,6 +33,17 @@ Intent: `0x425d5d85c24dba2f9c5b4528986ff6f2aeb7d8c4e6d6817a1fe52911d4985622`
 These are public-chain transactions, distinct from the UI simulation and local EVM tests.
 The L2 transaction receipt is not a claim of immediate Ethereum L1 finality.
 
+## Source verification
+
+Sourcify v2 returned **exact creation and runtime bytecode matches** for all three
+deployed contracts on October 13, 2026:
+
+- [Account factory](https://repo.sourcify.dev/84532/0xd7def713656aee75519a156ee408db77d306f257)
+- [Sample checkout](https://repo.sourcify.dev/84532/0x0407348ff5372e0a49e92cf364d408a01ee49027)
+- [Demo intent account](https://repo.sourcify.dev/84532/0x2Ad9e730C902D30Ef267dBcEEFcE859752445193)
+
+Exact source matching establishes reproducibility; it is not a security audit.
+
 ## Hosting
 
 - Cloudflare Worker + static assets + D1: https://lastwei.ajnasnb.workers.dev
